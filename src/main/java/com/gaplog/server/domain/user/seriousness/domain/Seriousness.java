@@ -10,15 +10,16 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Seriousness {
 
-    @jakarta.persistence.Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "id", nullable = false)
+    @Column(name = "id", nullable = false)
     private Long id;
 
 
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private int user;
 
+    @Column(name = "id", nullable = false)
     private int tier;
 
     // 진지 기록
