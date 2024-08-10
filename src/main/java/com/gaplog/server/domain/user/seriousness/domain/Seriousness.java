@@ -19,7 +19,7 @@ public class Seriousness {
     @JoinColumn(name = "user_id", nullable = false)
     private int user;
 
-    @Column(name = "id", nullable = false)
+    @Column(name = "tier", nullable = false)
     private int tier;
 
     // 진지 기록
