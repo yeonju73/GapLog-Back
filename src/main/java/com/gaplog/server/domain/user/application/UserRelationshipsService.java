@@ -22,7 +22,6 @@ public class UserRelationshipsService {
 
     public List<UserRelationshipsDTO> getFollowers(Long userId) {
 
-        // Mock Data
         List<UserRelationshipsDTO> followers = new ArrayList<>();
         followers.add(UserRelationshipsDTO.of(1L, 2L, userId));
         return followers;

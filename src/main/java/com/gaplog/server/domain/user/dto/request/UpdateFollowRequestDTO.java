@@ -1,4 +1,4 @@
-package com.gaplog.server.domain.user.dto;
+package com.gaplog.server.domain.user.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
