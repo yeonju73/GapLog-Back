@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Optional;
+
 @Getter
 @NoArgsConstructor
 @Table(
@@ -29,5 +31,10 @@ public class UserRelationships {
     @JoinColumn(name = "followee_id", nullable = false)
     private User followee;
 
+
+    public UserRelationships(User follower, User followee) {
+        this.follower = follower;
+        this.followee = followee;
+    }
 
 }

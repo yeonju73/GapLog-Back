@@ -1,14 +1,12 @@
 package com.gaplog.server.domain.user.api;
 
 import com.gaplog.server.domain.user.application.UserRelationshipsService;
+import com.gaplog.server.domain.user.dto.UpdateFollowRequestDTO;
 import com.gaplog.server.domain.user.dto.UserRelationshipsDTO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,9 +32,21 @@ public class UserRelationshipsApi {
         return ResponseEntity.ok(followees);
     }
 
-    // 팔로우 관계 삭제
+    // 유저 팔로우 수정
+    @PutMapping("/{user_id}/follow")
+    public ResponseEntity<String> updateFollow(@PathVariable("user_id") Long userId,
+     @RequestBody UpdateFollowRequestDTO updateFollowRequestDTO){
 
+        String action = updateFollowRequestDTO.getAction();
+        Long targetId = updateFollowRequestDTO.getTargetId();
 
+        try {
+            String result = userRelationshipsService.updateFollow(userId, targetId, action);
+            return ResponseEntity.ok(result);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
 
 }

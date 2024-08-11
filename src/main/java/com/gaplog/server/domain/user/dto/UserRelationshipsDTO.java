@@ -18,12 +18,4 @@ public class UserRelationshipsDTO {
         return new UserRelationshipsDTO(id, followerId, followeeId);
     }
 
-    public static UserRelationshipsDTO of(UserRelationships entity) {
-        return new UserRelationshipsDTO(
-                entity.getId(),
-                entity.getFollower().getId(),
-                entity.getFollowee().getId()
-        );
-    }
-
 }
