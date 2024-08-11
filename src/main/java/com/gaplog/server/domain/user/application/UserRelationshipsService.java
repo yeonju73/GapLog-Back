@@ -1,6 +1,6 @@
-package com.gaplog.server.domain.user.user_relationships.application;
+package com.gaplog.server.domain.user.application;
 
-import com.gaplog.server.domain.user.user_relationships.dto.UserRelationshipsDTO;
+import com.gaplog.server.domain.user.dto.UserRelationshipsDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

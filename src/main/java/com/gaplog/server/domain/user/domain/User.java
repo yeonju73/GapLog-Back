@@ -1,4 +1,4 @@
-package com.gaplog.server.domain.user.user.domain;
+package com.gaplog.server.domain.user.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;

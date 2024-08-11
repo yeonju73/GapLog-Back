@@ -1,10 +1,9 @@
-package com.gaplog.server.domain.user.user_relationships.api;
+package com.gaplog.server.domain.user.api;
 
-import com.gaplog.server.domain.user.user_relationships.application.UserRelationshipsService;
-import com.gaplog.server.domain.user.user_relationships.dto.UserRelationshipsDTO;
+import com.gaplog.server.domain.user.application.UserRelationshipsService;
+import com.gaplog.server.domain.user.dto.UserRelationshipsDTO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

@@ -1,6 +1,6 @@
-package com.gaplog.server.domain.user.user_relationships.dto;
+package com.gaplog.server.domain.user.dto;
 
-import com.gaplog.server.domain.user.user_relationships.domain.UserRelationships;
+import com.gaplog.server.domain.user.domain.UserRelationships;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

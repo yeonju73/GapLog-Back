@@ -1,6 +1,6 @@
-package com.gaplog.server.domain.user.user_relationships.domain;
+package com.gaplog.server.domain.user.domain;
 
-import com.gaplog.server.domain.user.user.domain.User;
+import com.gaplog.server.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,7 +1,5 @@
-package com.gaplog.server.domain.user.post_scarp.domain;
+package com.gaplog.server.domain.user.domain;
 
-import com.gaplog.server.domain.post.domain.Post;
-import com.gaplog.server.domain.user.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
