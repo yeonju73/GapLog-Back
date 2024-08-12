@@ -3,6 +3,7 @@ package com.gaplog.server.domain.caterory.domain;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
@@ -10,6 +11,7 @@ import java.util.Objects;
 
 @Embeddable
 @AllArgsConstructor
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ClosureCategoryId implements Serializable {
     private Long ancestorId;

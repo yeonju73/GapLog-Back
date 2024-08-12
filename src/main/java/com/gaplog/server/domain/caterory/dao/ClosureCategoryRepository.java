@@ -4,6 +4,8 @@ import com.gaplog.server.domain.caterory.domain.ClosureCategory;
 import com.gaplog.server.domain.caterory.domain.ClosureCategoryId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ClosureCategoryRepository extends JpaRepository<ClosureCategory, ClosureCategoryId> {
+import java.util.List;
 
+public interface ClosureCategoryRepository extends JpaRepository<ClosureCategory, ClosureCategoryId> {
+    List<ClosureCategory> findByIdAncestorId(Long ancestorId);
 }
