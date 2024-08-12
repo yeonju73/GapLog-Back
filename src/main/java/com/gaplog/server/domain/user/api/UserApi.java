@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "User API", description = "유저 정보 관리 API")
 @RestController
-@RequestMapping("/api/user/{user_id}")
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class UserApi {
     // auth로 원래 유저 가입해야하는데 UserRelationship 확인위해 user 생성 메소드 추가
@@ -26,7 +26,7 @@ public class UserApi {
     }
 
     @Operation(summary = "유저 정보 수정", description = "유저의 정보를 수정합니다.")
-    @PutMapping
+    @PutMapping("/{user_id}")
     public ResponseEntity<UserResponseDTO> updateUser(@PathVariable ("user_id") Long userId,
                                                       @RequestBody UserUpdateRequestDTO userUpdateRequestDTO){
 
@@ -36,7 +36,7 @@ public class UserApi {
 
 
     @Operation(summary = "유저 정보 조회", description = "유저의 정보를 조회합니다.")
-    @GetMapping
+    @GetMapping("/{user_id}")
     public ResponseEntity<UserResponseDTO> getUser(@PathVariable ("user_id") Long userId){
         UserResponseDTO userResponseDTO = userService.getUserInfo(userId);
         return ResponseEntity.ok(userResponseDTO);

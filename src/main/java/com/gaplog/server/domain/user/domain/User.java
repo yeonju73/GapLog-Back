@@ -29,6 +29,9 @@ public class User {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Seriousness seriousness;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
