@@ -1,7 +1,7 @@
 package com.gaplog.server.domain.caterory.api;
 
-import com.gaplog.server.domain.caterory.api.request.CategorySaveRequest;
-import com.gaplog.server.domain.caterory.api.request.CategoryUpdateRequest;
+import com.gaplog.server.domain.caterory.dto.request.CategorySaveRequest;
+import com.gaplog.server.domain.caterory.dto.request.CategoryUpdateRequest;
 import com.gaplog.server.domain.caterory.domain.Category;
 import com.gaplog.server.domain.caterory.application.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
