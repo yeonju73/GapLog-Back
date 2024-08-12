@@ -32,7 +32,7 @@ public class Category {
         this.user = user;
     }
 
-    public static Category createCategory(String name, User user) {
+    public static Category of(String name, User user) {
         return Category.builder()
                 .name(name)
                 .user(user)
