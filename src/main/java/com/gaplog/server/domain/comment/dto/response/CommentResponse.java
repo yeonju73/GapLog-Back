@@ -3,23 +3,27 @@ package com.gaplog.server.domain.comment.dto.response;
 import com.gaplog.server.domain.comment.domain.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Data
+@Builder
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class CommentResponse {
 
-    private Long id;
-    private Long postId;
-    private Long parentId;
-    private Long userId;
-    private String text;
-    private int likeCount;
+    private Long commentId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    public static CommentResponse of(Comment comment) {
+        return CommentResponse.builder()
+                .commentId(comment.getId())
+                .createdAt(LocalDateTime.parse(comment.getCreatedAt().toString()))
+                .updatedAt(LocalDateTime.parse(comment.getUpdatedAt().toString()))
+                .build();
+    }
+
 }
