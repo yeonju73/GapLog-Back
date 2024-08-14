@@ -1,34 +1,28 @@
 package com.gaplog.server.domain.comment.application;
 
-import com.gaplog.server.domain.comment.dto.request.CommentRequest;
+import com.gaplog.server.domain.comment.domain.Comment;
+import com.gaplog.server.domain.comment.dto.response.CommentLikeUpdateResponse;
 import com.gaplog.server.domain.comment.dto.response.CommentResponse;
+import com.gaplog.server.domain.comment.dto.response.CommentUpdateResponse;
+import com.gaplog.server.domain.post.domain.Post;
+import com.gaplog.server.domain.user.domain.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class CommentService {
 
     // 댓글 작성
-    public CommentResponse createComment(CommentRequest commentRequest) {
-        // Mock response
-        return CommentResponse.builder()
-                .id(1L)
-                .postId(commentRequest.getPostId())
-                .userId(commentRequest.getUserId())
-                .text(commentRequest.getText())
-                .likeCount(0)
-                .build();
+    public CommentResponse createComment(Long postId, Long userId, String text, Long parentId) {
+        Comment comment = new Comment(1L, new Post(), new User(), text, null);
+        return CommentResponse.of(comment);
     }
 
     // 댓글 수정
-    public CommentResponse updateComment(Long commentId, CommentRequest commentRequest) {
-        // Mock response
-        return CommentResponse.builder()
-                .id(commentId)
-                .postId(commentRequest.getPostId())
-                .userId(commentRequest.getUserId())
-                .text(commentRequest.getText())
-                .likeCount(10) // Assume like count stays the same
-                .build();
+    public CommentUpdateResponse updateComment(Long commentId, String text) {
+        Comment comment = new Comment(1L, new Post(), new User(), text, null);
+        return CommentUpdateResponse.of(comment);
     }
 
     // 댓글 삭제
@@ -37,14 +31,8 @@ public class CommentService {
     }
 
     // 댓글 좋아요 수 수정
-    public CommentResponse updateLikeCount(Long commentId, int likeCount) {
-        // Mock response
-        return CommentResponse.builder()
-                .id(commentId)
-                .postId(1L) // Assume postId is 1 for this mock
-                .userId(2L) // Assume userId is 2 for this mock
-                .text("Sample comment text")
-                .likeCount(likeCount)
-                .build();
+    public CommentLikeUpdateResponse updateLikeCount(Long commentId, boolean like) {
+        Comment comment = new Comment(1L, new Post(), new User(), "text", null);
+        return CommentLikeUpdateResponse.of(comment);
     }
 }

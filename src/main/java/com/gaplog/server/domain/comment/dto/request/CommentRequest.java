@@ -14,12 +14,11 @@ public class CommentRequest {
     @NotNull
     private Long postId;
 
+    @NotNull
+    private Long userId;
+
     @NotBlank
     private String text;
 
     private Long parentId;
-
-    @NotNull
-    private Long userId;
-
 }

@@ -32,7 +32,7 @@ public class Comment {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String text;
 
-    @Column(name = "parent_id", nullable = false)
+    @Column(name = "parent_id")
     private Comment parent;
 
     @Column(name = "like_count", nullable = false)
