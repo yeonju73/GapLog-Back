@@ -7,19 +7,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-public class CommentRequestDto {
+@NoArgsConstructor
+@AllArgsConstructor
+public class CommentUpdateRequest {
 
     @NotNull
-    private Long postId;
+    private Long id; // 수정할 댓글 ID
 
     @NotBlank
-    private String text;
-
-    private Long parentId;
-
-    @NotNull
-    private Long userId;
+    private String text; // 수정된 댓글 내용
 
 }

@@ -1,4 +1,4 @@
-package com.gaplog.server.domain.comment.dto;
+package com.gaplog.server.domain.comment.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentLikeUpdateDto {
+public class CommentLikeUpdateRequest {
 
     @NotNull
     private Long id; // 댓글 ID

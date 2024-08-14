@@ -1,5 +1,6 @@
 package com.gaplog.server.domain.comment.dto.response;
 
+import com.gaplog.server.domain.comment.domain.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CommentResponseDto {
+public class CommentResponse {
 
     private Long id;
     private Long postId;
