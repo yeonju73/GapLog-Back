@@ -11,15 +11,15 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @AllArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class Seriousness {
+public class SeriousnessDto {
 
     private Long seriousnessId;
     private Long userId;
     private int tier;
     private LocalDate localDate;
 
-    public static Seriousness from(com.gaplog.server.domain.user.domain.Seriousness seriousness){
-        return Seriousness.builder()
+    public static SeriousnessDto from(com.gaplog.server.domain.user.domain.Seriousness seriousness){
+        return SeriousnessDto.builder()
                 .seriousnessId(seriousness.getId())
                 .userId(seriousness.getUser().getId())
                 .tier(seriousness.getTier())
