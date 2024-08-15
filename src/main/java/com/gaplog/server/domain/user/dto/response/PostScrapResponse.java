@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 
 @Builder
 @Getter
-@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@AllArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class PostScrapResponse {
     private Long scarpId;
 
