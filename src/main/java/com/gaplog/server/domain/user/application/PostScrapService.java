@@ -19,33 +19,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostScrapService {
     private final PostScrapRepository postScrapRepository;
-    private final UserRepository userRepository;
-    private final PostRepository postRepository;
-
-
-    @Transactional
-    public PostScrapResponse scrapPost(Long userId, PostScrapRequest postScrapRequestDTO) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userId));
-        Post post = postRepository.findById(postScrapRequestDTO.getPostId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid post ID: " + postScrapRequestDTO.getPostId()));
-
-        PostScrap postScrap = new PostScrap(user, post);
-        postScrapRepository.save(postScrap);
-
-        return PostScrapResponse.of(postScrap.getId());
-    }
-
-    @Transactional
-    public void removeScrap(Long userId, Long postId) {
-        if (!postScrapRepository.existsByUserIdAndPostId(userId, postId)) {
-            throw new IllegalArgumentException("No Scrap");
-        }
-        postScrapRepository.deleteByUserIdAndPostId(userId, postId);
-    }
 
     @Transactional(readOnly = true)
     public List<PostScrapResponse> getScrapPosts(Long userId) {
+        // Next: post aggregate 완성되면 postId 반환되도록 수정 필요
+
         List<PostScrap> postScraps = postScrapRepository.findAllByUserId(userId);
         return postScraps.stream()
                 .map(postScrap -> PostScrapResponse.of(postScrap.getId()))
