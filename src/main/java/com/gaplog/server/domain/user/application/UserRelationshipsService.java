@@ -3,32 +3,40 @@ package com.gaplog.server.domain.user.application;
 import com.gaplog.server.domain.user.dao.UserRelationshipsRepository;
 import com.gaplog.server.domain.user.dao.UserRepository;
 import com.gaplog.server.domain.user.domain.User;
-import com.gaplog.server.domain.user.dto.UserRelationships;
+import com.gaplog.server.domain.user.domain.UserRelationships;
+import com.gaplog.server.domain.user.dto.UserRelationshipsDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserRelationshipsService {
 
-    private final UserRelationshipsRepository userRelationshipsRepository;
+    private final UserRelationshipsRepository userRelationshipsRepo;
     private  final UserRepository userRepository;
 
-    public List<UserRelationships> getFollowers(Long userId) {
+    @Transactional(readOnly=true)
+    public List<UserRelationshipsDto> getFollowers(Long userId) {
 
-        List<UserRelationships> followers = new ArrayList<>();
-        followers.add(UserRelationships.of(1L, 2L, userId));
-        return followers;
+        List<UserRelationships> followers = userRelationshipsRepo.findAllByFolloweeId(userId);
+
+        return followers.stream()
+                .map(UserRelationshipsDto::of)
+                .collect(Collectors.toList());
     }
 
-    public List<UserRelationships> getFollowees(Long userId) {
-        List<UserRelationships> followees = new ArrayList<>();
-        followees.add(UserRelationships.of(1L, 2L, userId));
-        return followees;
+    @Transactional(readOnly=true)
+    public List<UserRelationshipsDto> getFollowees(Long userId) {
+        List<UserRelationships> followees = userRelationshipsRepo.findAllByFolloweeId(userId);
+
+        return followees.stream()
+                .map(UserRelationshipsDto::of)
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -50,8 +58,8 @@ public class UserRelationshipsService {
         User followee = userRepository.findById(targetId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid followee ID: " + targetId));
 
-        com.gaplog.server.domain.user.domain.UserRelationships relationship = new com.gaplog.server.domain.user.domain.UserRelationships(follower, followee);
-        userRelationshipsRepository.save(relationship);
+        UserRelationships relationship = new UserRelationships(follower, followee);
+        userRelationshipsRepo.save(relationship);
     }
 
     private void unfollowUser(Long userId, Long targetId) {
@@ -60,7 +68,7 @@ public class UserRelationshipsService {
         User followee = userRepository.findById(targetId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid followee ID: " + targetId));
 
-        com.gaplog.server.domain.user.domain.UserRelationships relationship = new com.gaplog.server.domain.user.domain.UserRelationships(follower, followee);
-        userRelationshipsRepository.delete(relationship);
+        UserRelationships relationship = new UserRelationships(follower, followee);
+        userRelationshipsRepo.delete(relationship);
     }
 }
