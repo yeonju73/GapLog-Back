@@ -2,10 +2,11 @@ package com.gaplog.server.domain.user.api;
 
 import com.gaplog.server.domain.user.application.UserRelationshipsService;
 import com.gaplog.server.domain.user.dto.request.UpdateFollowRequest;
-import com.gaplog.server.domain.user.dto.UserRelationships;
+import com.gaplog.server.domain.user.dto.UserRelationshipsDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,23 +15,32 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
-@Tag(name = "user-relationships API", description = "유저 간 관계 관리 API")
+@Tag(name = "User-relationships", description = "User-relationships API")
 public class UserRelationshipsApi {
 
     private final UserRelationshipsService userRelationshipsService;
 
     @Operation(summary = "유저의 팔로워 목록 조회", description = "특정 유저를 팔로우 하고 있는 목록을 조회합니다.")
     @GetMapping("/{user_id}/followers")
-    public ResponseEntity<List<UserRelationships>> getFollowers(@PathVariable("user_id") Long userId) {
-        List<UserRelationships> followers = userRelationshipsService.getFollowers(userId);
-        return ResponseEntity.ok(followers);
+    public ResponseEntity<List<UserRelationshipsDto>> getFollowers(@PathVariable("user_id") Long userId) {
+        try{
+            List<UserRelationshipsDto> followers = userRelationshipsService.getFollowers(userId);
+            return ResponseEntity.ok(followers);
+        } catch (RuntimeException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @Operation(summary = "유저의 팔로우 목록 조회", description = "특정 유저가 팔로우 하고 있는 목록을 조회합니다.")
     @GetMapping("/{user_id}/followees")
-    public ResponseEntity<List<UserRelationships>> getFollowees(@PathVariable("user_id") Long userId) {
-        List<UserRelationships> followees = userRelationshipsService.getFollowees(userId);
-        return ResponseEntity.ok(followees);
+    public ResponseEntity<List<UserRelationshipsDto>> getFollowees(@PathVariable("user_id") Long userId) {
+        try{
+            List<UserRelationshipsDto> followees = userRelationshipsService.getFollowees(userId);
+            return ResponseEntity.ok(followees);
+        } catch (RuntimeException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
 
     @Operation(summary = "유저의 팔로우 목록 수정", description = "유저가 팔로우 하고 있는 목록을 수정합니다.")
@@ -44,8 +54,8 @@ public class UserRelationshipsApi {
         try {
             String result = userRelationshipsService.updateFollow(userId, targetId, action);
             return ResponseEntity.ok(result);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
