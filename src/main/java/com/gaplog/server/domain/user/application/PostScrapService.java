@@ -12,6 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class PostScrapService {
@@ -41,5 +44,12 @@ public class PostScrapService {
         postScrapRepository.deleteByUserIdAndPostId(userId, postId);
     }
 
-
+    @Transactional(readOnly = true)
+    public List<PostScrapResponse> getScrapPosts(Long userId) {
+        List<PostScrap> postScraps = postScrapRepository.findAllByUserId(userId);
+        return postScraps.stream()
+                .map(postScrap -> PostScrapResponse.of(postScrap.getId()))
+                .collect(Collectors.toList());
+    }
 }
+
