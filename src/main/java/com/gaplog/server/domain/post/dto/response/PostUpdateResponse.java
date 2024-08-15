@@ -12,25 +12,13 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-public class MainPostResponseDTO {
-
-    //comment
+public class PostUpdateResponse {
     private Long id;
-    private String title;
-    private String thumbnailUrl;
-    private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private int likeCount;
-    private int jinjiCount;
 
-    public static MainPostResponseDTO of(Post post) {
-        return MainPostResponseDTO.builder()
+    public static PostUpdateResponse of(Post post) {
+        return PostUpdateResponse.builder()
                 .id(post.getId())
-                .title(post.getTitle())
-                .thumbnailUrl(post.getThumbnailUrl())
-                .likeCount(post.getLikeCount())
-                .jinjiCount(post.getJinjiCount())
-                .createdAt(LocalDateTime.parse(post.getCreatedAt().toString()))
                 .updatedAt(LocalDateTime.parse(post.getUpdatedAt().toString()))
                 .build();
     }

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-public class FindByKeywordPostResponseDTO {
+public class FindByCategoryPostResponse {
 
     //comment
     private Long id;
@@ -23,8 +23,8 @@ public class FindByKeywordPostResponseDTO {
     private int likeCount;
     private int jinjiCount;
 
-    public static FindByKeywordPostResponseDTO of(Post post) {
-        return FindByKeywordPostResponseDTO.builder()
+    public static FindByCategoryPostResponse of(Post post) {
+        return FindByCategoryPostResponse.builder()
                 .id(post.getId())
                 .title(post.getTitle())
                 .thumbnailUrl(post.getThumbnailUrl())

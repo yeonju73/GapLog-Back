@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-public class PostCreateRequestDTO {
-    private String title;
-    private String text;
+public class PostLikeUpdateRequest {
+    //private Long postId;
+    private boolean like;
 }

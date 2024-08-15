@@ -1,6 +1,6 @@
 package com.gaplog.server.domain.user.application;
 
-import com.gaplog.server.domain.post.application.PostRepository;
+import com.gaplog.server.domain.post.dao.PostRepository;
 import com.gaplog.server.domain.post.domain.Post;
 import com.gaplog.server.domain.user.dao.PostScrapRepository;
 import com.gaplog.server.domain.user.dao.UserRepository;

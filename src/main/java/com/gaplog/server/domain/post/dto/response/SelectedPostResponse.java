@@ -12,22 +12,22 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-public class FindByCategoryPostResponseDTO {
+public class SelectedPostResponse {
 
     //comment
     private Long id;
     private String title;
-    private String thumbnailUrl;
+    private String content;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private int likeCount;
     private int jinjiCount;
 
-    public static FindByCategoryPostResponseDTO of(Post post) {
-        return FindByCategoryPostResponseDTO.builder()
+    public static SelectedPostResponse of(Post post) {
+        return SelectedPostResponse.builder()
                 .id(post.getId())
                 .title(post.getTitle())
-                .thumbnailUrl(post.getThumbnailUrl())
+                .content(post.getContent())
                 .likeCount(post.getLikeCount())
                 .jinjiCount(post.getJinjiCount())
                 .createdAt(LocalDateTime.parse(post.getCreatedAt().toString()))

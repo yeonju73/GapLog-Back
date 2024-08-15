@@ -1,11 +1,9 @@
 package com.gaplog.server.domain.post.domain;
 
-import com.gaplog.server.domain.user.User;
+import com.gaplog.server.domain.caterory.domain.Category;
+import com.gaplog.server.domain.user.domain.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -64,6 +62,10 @@ public class Post {
     @Column
     private int jinjiCount;
 
+    @Column
+    private int scrapCount;
+
+
     @PrePersist
     protected void onCreate(){
         this.createdAt = LocalDateTime.now();
@@ -95,11 +97,51 @@ public class Post {
 //        this.updatedAt = LocalDateTime.now();
 //    }
 
-    public void updateLikeCount(int likeCount) {
-        this.likeCount = likeCount;
+
+    //반응 수 증가
+    public void increaseLikeCount() {
+        this.likeCount++;
     }
 
-    public void updateJinjiCount(int jinjiCount) {
-        this.jinjiCount = jinjiCount;
+    public void increaseJinjiCount() {this.jinjiCount++;}
+
+    public void increaseScrapCount() {
+        this.scrapCount++;
+    }
+
+    //반응 수 증가
+    public void decreaseLikeCount() {
+        this.likeCount--;
+    }
+
+    public void decreaseJinjiCount() {
+        this.jinjiCount--;
+    }
+
+    public void decreaseScrapCount() {
+        this.scrapCount--;
+    }
+
+    @Builder
+    public Post(String title, String content, String category, String thumbnailUrl, User user) {
+        this.title = title;
+        this.content = content;
+        this.category = category;
+        this.thumbnailUrl = thumbnailUrl;
+        onCreate();
+        this.likeCount = 0;
+        this.jinjiCount = 0;
+        this.scrapCount = 0;
+        this.user = user;
+    }
+
+    public static Post of(String title, String content, String category, String thumbnailUrl, User user) {
+        return Post.builder()
+                .title(title)
+                .content(content)
+                .category(category)
+                .thumbnailUrl(thumbnailUrl)
+                .user(user)
+                .build();
     }
 }
