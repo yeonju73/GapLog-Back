@@ -15,11 +15,13 @@ import java.time.LocalDateTime;
 public class CommentUpdateResponse {
 
     private Long commentId;
+    private String text;
     private LocalDateTime updatedAt;
 
     public static CommentUpdateResponse of(Comment comment) {
         return CommentUpdateResponse.builder()
                 .commentId(comment.getId())
+                .text(comment.getText())
                 .updatedAt(LocalDateTime.parse(comment.getUpdatedAt().toString()))
                 .build();
     }

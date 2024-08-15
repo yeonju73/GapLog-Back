@@ -6,12 +6,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
+
     List<Comment> findByPostId(Long postId);
 
     List<Comment> findByParentId(Long parentId);
 
     List<Comment> findByUserId(Long userId);
 
+    //특정 post에 대해 특정 user가 작성한 모든 댓글을 조회
     List<Comment> findByPostIdAndUserId(Long postId, Long userId);
 
     //특정 post 에서 최상위(부모 댓글이 없는) comment를 조회

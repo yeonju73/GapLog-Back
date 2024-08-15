@@ -52,6 +52,13 @@ public class Comment {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setLike_count(int like_count) {
+        this.like_count = like_count;
+    }
 
     //like_count 는 초기값이 명확하게 설정되어 있기 때문에 생성자에서 별도로 지정X
     @Builder
