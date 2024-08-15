@@ -18,23 +18,25 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    @Transactional
+    @Transactional(readOnly=true)
     public UserResponse getUserInfo(Long userId){
         User getUserInfo = userRepository.findById(userId).orElseThrow(()
-                -> new IllegalArgumentException("Invalid user ID: " + userId));
+                -> new IllegalArgumentException("User not found with id: " + userId));
         return UserResponse.of(getUserInfo);
     }
 
     @Transactional
     public UserResponse updateUser(Long userId, UserUpdateRequest userUpdateRequestDTO) {
-            User user = userRepository.findById(userId).orElseThrow(()
-            -> new IllegalArgumentException("Invalid user ID: " + userId));
+        User user = userRepository.findById(userId).orElseThrow(()
+                -> new IllegalArgumentException("Invalid user ID: " + userId));
 
         user.updateNickName(userUpdateRequestDTO.getNickName());
         user.updateIntroduce(userUpdateRequestDTO.getIntroduce());
         user.updateProfileImg(userUpdateRequestDTO.getProfileImg());
 
         User updateUser = userRepository.save(user);
+
         return UserResponse.of(updateUser);
     }
+
 }
