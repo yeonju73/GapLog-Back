@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-public class UserResponseDTO {
+public class UserResponse {
 
     private Long userId;
     private String nickName;
@@ -21,8 +21,8 @@ public class UserResponseDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public static UserResponseDTO of(User user){
-        return UserResponseDTO.builder()
+    public static UserResponse of(User user){
+        return UserResponse.builder()
                 .userId(user.getId())
                 .nickName(user.getNickName())
                 .introduce(user.getIntroduce())

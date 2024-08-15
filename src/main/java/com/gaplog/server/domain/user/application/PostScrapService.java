@@ -6,8 +6,8 @@ import com.gaplog.server.domain.user.dao.PostScrapRepository;
 import com.gaplog.server.domain.user.dao.UserRepository;
 import com.gaplog.server.domain.user.domain.PostScrap;
 import com.gaplog.server.domain.user.domain.User;
-import com.gaplog.server.domain.user.dto.request.PostScrapRequestDTO;
-import com.gaplog.server.domain.user.dto.response.PostScrapResponseDTO;
+import com.gaplog.server.domain.user.dto.request.PostScrapRequest;
+import com.gaplog.server.domain.user.dto.response.PostScrapResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +21,7 @@ public class PostScrapService {
 
 
     @Transactional
-    public PostScrapResponseDTO scrapPost(Long userId, PostScrapRequestDTO postScrapRequestDTO) {
+    public PostScrapResponse scrapPost(Long userId, PostScrapRequest postScrapRequestDTO) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userId));
         Post post = postRepository.findById(postScrapRequestDTO.getPostId())
@@ -30,7 +30,7 @@ public class PostScrapService {
         PostScrap postScrap = new PostScrap(user, post);
         postScrapRepository.save(postScrap);
 
-        return PostScrapResponseDTO.of(postScrap.getId());
+        return PostScrapResponse.of(postScrap.getId());
     }
 
     @Transactional

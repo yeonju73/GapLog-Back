@@ -2,8 +2,8 @@ package com.gaplog.server.domain.user.application;
 
 import com.gaplog.server.domain.user.dao.UserRepository;
 import com.gaplog.server.domain.user.domain.User;
-import com.gaplog.server.domain.user.dto.request.UserUpdateRequestDTO;
-import com.gaplog.server.domain.user.dto.response.UserResponseDTO;
+import com.gaplog.server.domain.user.dto.request.UserUpdateRequest;
+import com.gaplog.server.domain.user.dto.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,14 +19,14 @@ public class UserService {
     }
 
     @Transactional
-    public  UserResponseDTO getUserInfo(Long userId){
+    public UserResponse getUserInfo(Long userId){
         User getUserInfo = userRepository.findById(userId).orElseThrow(()
                 -> new IllegalArgumentException("Invalid user ID: " + userId));
-        return UserResponseDTO.of(getUserInfo);
+        return UserResponse.of(getUserInfo);
     }
 
     @Transactional
-    public UserResponseDTO updateUser(Long userId, UserUpdateRequestDTO userUpdateRequestDTO) {
+    public UserResponse updateUser(Long userId, UserUpdateRequest userUpdateRequestDTO) {
             User user = userRepository.findById(userId).orElseThrow(()
             -> new IllegalArgumentException("Invalid user ID: " + userId));
 
@@ -35,6 +35,6 @@ public class UserService {
         user.updateProfileImg(userUpdateRequestDTO.getProfileImg());
 
         User updateUser = userRepository.save(user);
-        return UserResponseDTO.of(updateUser);
+        return UserResponse.of(updateUser);
     }
 }

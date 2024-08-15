@@ -1,8 +1,8 @@
 package com.gaplog.server.domain.user.api;
 
 import com.gaplog.server.domain.user.application.PostScrapService;
-import com.gaplog.server.domain.user.dto.request.PostScrapRequestDTO;
-import com.gaplog.server.domain.user.dto.response.PostScrapResponseDTO;
+import com.gaplog.server.domain.user.dto.request.PostScrapRequest;
+import com.gaplog.server.domain.user.dto.response.PostScrapResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +18,10 @@ public class PostScrapApi {
 
     @Operation(summary = "게시글 스크랩", description = "유저가 특정 게시물을 스크랩합니다.")
     @PostMapping
-    public ResponseEntity<PostScrapResponseDTO> scrapPost(
+    public ResponseEntity<PostScrapResponse> scrapPost(
             @PathVariable("user_id") Long userId,
-            @RequestBody PostScrapRequestDTO requestDTO) {
-        PostScrapResponseDTO responseDTO = postScrapService.scrapPost(userId, requestDTO);
+            @RequestBody PostScrapRequest requestDTO) {
+        PostScrapResponse responseDTO = postScrapService.scrapPost(userId, requestDTO);
         return ResponseEntity.ok(responseDTO);
     }
 

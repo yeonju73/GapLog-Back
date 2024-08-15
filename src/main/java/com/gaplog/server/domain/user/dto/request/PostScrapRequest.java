@@ -7,8 +7,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-public class UpdateFollowRequestDTO {
+public class PostScrapRequest {
 
-    private Long targetId;
-    private String action;
+    private Long postId;
+    private boolean scrap;
+
+
 }

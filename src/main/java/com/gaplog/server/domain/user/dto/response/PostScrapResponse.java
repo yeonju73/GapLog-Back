@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-public class PostScrapResponseDTO {
+public class PostScrapResponse {
     private Long scarpId;
 
-    public static PostScrapResponseDTO of(Long id){
-        return PostScrapResponseDTO.builder().scarpId(id).build();
+    public static PostScrapResponse of(Long id){
+        return PostScrapResponse.builder().scarpId(id).build();
     }
 }
