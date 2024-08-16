@@ -89,17 +89,17 @@ public class PostApi {
 //    }
 
 
-
-//    @GetMapping("/keywords/{keyword}")
-//    @Operation(summary = "키워드 게시글 조회", description = "입력된 키워드를 포함한 게시글의 정보를 얻습니다.")
-//    public ResponseEntity<List<MainPostResponse>> getKeywordPost() {
-//        try {
-//            List<MainPostResponse> posts = postService.getMainPostInfo();
-//            return new ResponseEntity<>(posts, HttpStatus.OK);
-//        } catch (RuntimeException e) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
+    //?@RequestParam Stirng keyword
+    @GetMapping("/keywords/{keyword}")
+    @Operation(summary = "키워드 게시글 조회", description = "입력된 키워드를 포함한 게시글의 정보를 얻습니다.")
+    public ResponseEntity<List<FindByKeywordPostResponse>> getKeywordPost(@PathVariable("keyword") String keyword) {
+        try {
+            List<FindByKeywordPostResponse> posts = postService.getFindByKeywordPostInfo(keyword);
+            return new ResponseEntity<>(posts, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
     @GetMapping("/categories/{category_id}")
     @Operation(summary = "카테고리 게시글 조회", description = "입력된 카테고리에 포함된 게시글의 정보를 얻습니다.")

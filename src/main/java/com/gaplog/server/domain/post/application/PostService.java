@@ -121,11 +121,22 @@ public class PostService {
     }
 
     //키워드 조회
+    /*
+     * To-Do
+     * 키워드별 조회 작성
+     * */
     @Transactional
-    public FindByKeywordPostResponse getFindByKeywordPostInfo(Long postId) {
-        Post getFindByKeywordPostInfo = postRepository.findById(postId).orElseThrow(()
-                ->new IllegalArgumentException("Post not found: " + postId));
-        return FindByKeywordPostResponse.of(getFindByKeywordPostInfo);
+    public List<FindByKeywordPostResponse> getFindByKeywordPostInfo(String keyword) {
+        List<Post> posts = postRepository.findByTitleContainingOrContentContaining(keyword, keyword);
+
+        if(posts.isEmpty()){
+            throw new RuntimeException("Post not found with keyword: " + keyword);
+        }
+        else{
+            return posts.stream()
+                    .map(FindByKeywordPostResponse::of)
+                    .collect(Collectors.toList());
+        }
     }
 
 
