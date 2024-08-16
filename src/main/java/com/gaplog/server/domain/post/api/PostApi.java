@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/posts")
 @RequiredArgsConstructor
@@ -99,16 +101,16 @@ public class PostApi {
 //        }
 //    }
 
-//    @GetMapping("/categories/{category}")
-//    @Operation(summary = "카테고리 게시글 조회", description = "입력된 카테고리에 포함된 게시글의 정보를 얻습니다.")
-//    public ResponseEntity<List<MainPostResponse>> getKeywordPost() {
-//        try {
-//            List<MainPostResponse> posts = postService.getMainPostInfo();
-//            return new ResponseEntity<>(posts, HttpStatus.OK);
-//        } catch (RuntimeException e) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
+    @GetMapping("/categories/{category_id}")
+    @Operation(summary = "카테고리 게시글 조회", description = "입력된 카테고리에 포함된 게시글의 정보를 얻습니다.")
+    public ResponseEntity<List<FindByCategoryPostResponse>> getCategoryPost(@PathVariable ("category_id") Long categoryId) {
+        try {
+            List<FindByCategoryPostResponse> posts = postService.getFindByCategoryPostInfo(categoryId);
+            return new ResponseEntity<>(posts, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
 
 }

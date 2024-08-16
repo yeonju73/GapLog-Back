@@ -15,7 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -94,11 +96,28 @@ public class PostService {
     }
 
     //카테고리별 조회
+    /*
+     * To-Do
+     * 카테고리별 조회 작성
+     * */
     @Transactional
-    public FindByCategoryPostResponse getFindByCategoryPostInfo(Long postId) {
-        Post getFindByCategoryPostInfo = postRepository.findById(postId).orElseThrow(()
-                ->new IllegalArgumentException("Post not found: " + postId));
-        return FindByCategoryPostResponse.of(getFindByCategoryPostInfo);
+    public List<FindByCategoryPostResponse> getFindByCategoryPostInfo(Long categoryId){
+        Optional<Category> categoryOpt = categoryRepository.findById(categoryId);
+        if(categoryOpt.isPresent()){
+            List<Post> posts = postRepository.findByCategoryId(categoryId);
+
+            if(posts.isEmpty()){
+                throw new RuntimeException("Post not found with this category id: " + categoryId);
+            }
+            else{
+                return posts.stream()
+                        .map(FindByCategoryPostResponse::of)
+                        .collect(Collectors.toList());
+            }
+        }
+        else {
+            throw new RuntimeException("Category not found with id: " + categoryId);
+        }
     }
 
     //키워드 조회
