@@ -61,8 +61,18 @@ public class PostService {
     }
 
     //post 삭제
+    /*To-Do
+     * post 삭제 기능 구현
+     * */
     public void deletePost(Long postId) {
+        Optional<Post> postOpt = postRepository.findById(postId);
+        if (postOpt.isEmpty()) {
+            throw new RuntimeException("Post not found with id: " + postId);
+        }
 
+        Post post = postOpt.get();
+
+        postRepository.delete(post);
     }
 
 
