@@ -1,5 +1,6 @@
 package com.gaplog.server.domain.post.domain;
 
+import com.gaplog.server.domain.caterory.domain.Category;
 import com.gaplog.server.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,6 +25,9 @@ public class Post {
     @JoinColumn(name="user_id") // foreign key (user_id) references User (id)
     private User user;  //참조할 테이블
 
+    @ManyToOne // Many = Post, Category = One 한개의 카테고리는 여러개의 게시글을 포함할 수 있다.
+    @JoinColumn(name="category_id") // foreign key (category_id) references Category (id)
+    private Category category;
 
     //content
     @Column(length = 100)
@@ -32,8 +36,8 @@ public class Post {
     @Column(length = 100)
     private String content;
 
-    @Column(length = 45)
-    private String category;
+//    @Column(length = 45)
+//    private String category;
 
     @Column(length = 100)
     private String thumbnailUrl;
@@ -122,7 +126,7 @@ public class Post {
     }
 
     @Builder
-    public Post(String title, String content, String category, String thumbnailUrl, User user) {
+    public Post(String title, String content, Category category, String thumbnailUrl, User user) {
         this.title = title;
         this.content = content;
         this.category = category;
@@ -134,7 +138,7 @@ public class Post {
         this.user = user;
     }
 
-    public static Post of(String title, String content, String category, String thumbnailUrl, User user) {
+    public static Post of(String title, String content, Category category, String thumbnailUrl, User user) {
         return Post.builder()
                 .title(title)
                 .content(content)

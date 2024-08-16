@@ -24,7 +24,7 @@ public class PostApi {
     @PutMapping("/")
     @Operation(summary = "게시글 작성", description = "게시글을 작성합니다.")
     public ResponseEntity<Post> putPost(@RequestBody PostRequest request) {
-        Post response = postService.createPost(request.getUser().getId(), request.getTitle(), request.getContent(), request.getCategory(), request.getThumbnailUrl());
+        Post response = postService.createPost(request.getUser().getId(), request.getTitle(), request.getContent(), request.getThumbnailUrl(), request.getCategory());
         return ResponseEntity.ok(response);
     }
 

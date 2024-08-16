@@ -1,5 +1,7 @@
 package com.gaplog.server.domain.post.application;
 
+import com.gaplog.server.domain.caterory.dao.CategoryRepository;
+import com.gaplog.server.domain.caterory.domain.Category;
 import com.gaplog.server.domain.post.dao.PostRepository;
 import com.gaplog.server.domain.post.domain.Post;
 import com.gaplog.server.domain.post.dto.request.PostJinjiUpdateRequest;
@@ -20,17 +22,28 @@ import java.util.Optional;
 public class PostService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final CategoryRepository categoryRepository;
 
     //기본 기능
     //post 작성
-    public Post createPost(Long userId, String title, String content, String thumbnailUrl, String category) {
+    /*To-Do
+     * 카테고리 string -> entity로 변경
+     * */
+    public Post createPost(Long userId, String title, String content, String thumbnailUrl, Long categoryId) {
         Optional<User> userOpt = userRepository.findById(userId);
         if (userOpt.isEmpty()) {
             throw new RuntimeException("User not found with id: " + userId);
         }
         User user = userOpt.get();
 
-        Post newPost = Post.of(title, content, thumbnailUrl, category, user);
+        //category 확인 추가,, 확인 필수,,
+        Optional<Category> categoryOpt = categoryRepository.findById(categoryId);
+        if (categoryOpt.isEmpty()) {
+            throw new RuntimeException("Category not found with id: " + categoryId);
+        }
+        Category category = categoryOpt.get();
+
+        Post newPost = Post.of(title, content, category, thumbnailUrl, user);
         return postRepository.save(newPost);
     }
 
