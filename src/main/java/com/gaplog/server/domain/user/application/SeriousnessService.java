@@ -1,5 +1,9 @@
 package com.gaplog.server.domain.user.application;
 
+<<<<<<< HEAD
+=======
+import com.gaplog.server.domain.post.dao.PostRepository;
+>>>>>>> upstream/main
 import com.gaplog.server.domain.user.dao.SeriousnessRepository;
 import com.gaplog.server.domain.user.dto.SeriousnessDto;
 import lombok.RequiredArgsConstructor;

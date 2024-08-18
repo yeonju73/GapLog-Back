@@ -3,7 +3,6 @@ package com.gaplog.server.domain.user.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 
 @Getter
@@ -57,6 +56,4 @@ public class User {
         this.profileImg = profileImg;
         this.onUpdate();
     }
-
-
 }
