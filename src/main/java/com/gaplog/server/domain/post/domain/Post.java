@@ -1,5 +1,6 @@
 package com.gaplog.server.domain.post.domain;
 
+public class Post {
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
