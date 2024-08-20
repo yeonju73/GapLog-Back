@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Entity
 public class Post {
     @Id
@@ -46,6 +46,7 @@ public class Post {
 
     @Column
     private int scrapCount;
+
 
 
     @PrePersist

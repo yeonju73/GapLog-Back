@@ -5,7 +5,6 @@ import com.gaplog.server.domain.post.application.PostService;
 import com.gaplog.server.domain.post.domain.Post;
 import com.gaplog.server.domain.post.dto.request.*;
 import com.gaplog.server.domain.post.dto.response.*;
-import com.gaplog.server.domain.user.dto.response.UserResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
