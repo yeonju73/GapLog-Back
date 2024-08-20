@@ -1,5 +1,6 @@
-package com.gaplog.server.domain.caterory.domain;
+package com.gaplog.server.domain.category.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,10 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ClosureCategoryId implements Serializable {
+    @Column(name = "ancestor_id")
     private Long ancestorId;
+
+    @Column(name = "descendant_id")
     private Long descendantId;
 
     @Override

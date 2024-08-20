@@ -1,15 +1,18 @@
-package com.gaplog.server.domain.caterory.application;
+package com.gaplog.server.domain.category.application;
 
-import com.gaplog.server.domain.caterory.dao.ClosureCategoryRepository;
-import com.gaplog.server.domain.caterory.domain.Category;
-import com.gaplog.server.domain.caterory.dao.CategoryRepository;
-import com.gaplog.server.domain.caterory.domain.ClosureCategory;
+import com.gaplog.server.domain.category.dao.ClosureCategoryRepository;
+import com.gaplog.server.domain.category.domain.Category;
+import com.gaplog.server.domain.category.dao.CategoryRepository;
+import com.gaplog.server.domain.category.domain.ClosureCategory;
+import com.gaplog.server.domain.category.dto.response.CategoryTreeResponse;
 import com.gaplog.server.domain.user.domain.User;
 import com.gaplog.server.domain.user.dao.UserRepository;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,13 +25,48 @@ public class CategoryService {
     private final ClosureCategoryRepository closureCategoryRepository;
     private final UserRepository userRepository;
 
-    public List<Category> getCategoriesByUserId(Long userId) {
+    public List<CategoryTreeResponse> getCategoryTree(Long userId) {
         Optional<User> user = userRepository.findById(userId);
-        if (user.isPresent()) {
-            return categoryRepository.findByUser(user.get());
-        } else {
+        if (user.isEmpty()) {
             throw new RuntimeException("User not found with id: " + userId);
         }
+
+        // 유저의 모든 카테고리 id 조회
+        List<Category> categories = categoryRepository.findByUser(user.get());
+        List<Long> categoryIds = categories.stream()
+                .map(Category::getId)
+                .collect(Collectors.toList());
+
+        // 루트 노드 조회
+        List<Long> rootCategoryIds = categoryIds.stream()
+                .filter(categoryId -> {
+                    Long descendantCount = closureCategoryRepository.countByIdDescendantId(categoryId);
+                    return descendantCount == 1;  // 자기 자신만 참조하는 경우 (depth = 0)
+                })
+                .collect(Collectors.toList());
+
+        // depth가 1인 부모-자식 관계 조회
+        List<ClosureCategory> closureCategories = closureCategoryRepository.findByIdAncestorIdInAndDepth(categoryIds, 1L);
+
+        // 트리 매핑
+        Map<Long, CategoryTreeResponse> categoryMap = categories.stream()
+                .collect(Collectors.toMap(
+                        Category::getId,
+                        category -> new CategoryTreeResponse(category.getId(), category.getName(), new ArrayList<>())
+                ));
+
+        closureCategories.stream()
+                .filter(closureCategory -> !closureCategory.getId().getAncestorId().equals(closureCategory.getId().getDescendantId()))
+                .forEach(closureCategory -> {
+                    Long parentId = closureCategory.getId().getAncestorId();
+                    Long childId = closureCategory.getId().getDescendantId();
+                    categoryMap.get(parentId).getChildren().add(categoryMap.get(childId));
+                });
+
+        // 루트 노드들의 트리 반환
+        return rootCategoryIds.stream()
+                .map(categoryMap::get)
+                .collect(Collectors.toList());
     }
 
     public List<Category> getSubCategories(Long categoryId) {
@@ -61,7 +99,7 @@ public class CategoryService {
         if (parentCategoryOpt.isPresent()) {
             Category parentCategory = parentCategoryOpt.get();
             //To Do: depth 계산 로직 추가
-            ClosureCategory closureCategory = ClosureCategory.of(parentCategory, savedCategory, 1);
+            ClosureCategory closureCategory = ClosureCategory.of(parentCategory, savedCategory, 1L);
             closureCategoryRepository.save(closureCategory);
         }
         return savedCategory;

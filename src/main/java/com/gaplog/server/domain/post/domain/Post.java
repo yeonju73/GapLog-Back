@@ -1,6 +1,6 @@
 package com.gaplog.server.domain.post.domain;
 
-import com.gaplog.server.domain.caterory.domain.Category;
+import com.gaplog.server.domain.category.domain.Category;
 import com.gaplog.server.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
