@@ -1,5 +1,6 @@
 package com.gaplog.server.domain.comment.application;
 
+import com.gaplog.server.domain.caterory.domain.Category;
 import com.gaplog.server.domain.comment.dao.CommentRepository;
 import com.gaplog.server.domain.comment.domain.Comment;
 import com.gaplog.server.domain.comment.dto.response.CommentLikeUpdateResponse;
@@ -26,18 +27,15 @@ public class CommentService {
     public CommentResponse createComment(Long postId, Long userId, String text, Long parentId) {
 
         //post, user 각각 Id로 repository 에서 find 해 연결 필요
-        Post post = new Post();
         User user = new User();
-
-        Comment parentComment = parentId != null ?
-                commentRepository.findById(parentId)
-                        .orElseThrow(() -> new EntityNotFoundException("Comment not found with id: " + parentId)) : null;
+        Category category = Category.of("category",user);
+        Post post = Post.of("title", "content", category, "url", user);
 
         Comment newComment = Comment.builder()
                 .post(post)
                 .user(user)
                 .text(text)
-                .parent(parentComment)
+                .parentId(parentId)
                 .build();
 
         commentRepository.save(newComment);
@@ -75,10 +73,10 @@ public class CommentService {
 
         // like가 true면 like을 새롭게 누른 것, false면 눌렀던 like를 지운 것으로 생각했습니다.
         if (like){
-            comment.setLike_count(comment.getLike_count() + 1);
+            comment.setLike_count(comment.getLikeCount() + 1);
         }else{
-            if (comment.getLike_count() > 0){
-                comment.setLike_count(comment.getLike_count() - 1);
+            if (comment.getLikeCount() > 0){
+                comment.setLike_count(comment.getLikeCount() - 1);
             }
         }
 
