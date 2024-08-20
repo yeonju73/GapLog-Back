@@ -33,7 +33,6 @@ public class CommentService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + postId));
 
-
         User user = userRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
 
@@ -74,10 +73,10 @@ public class CommentService {
 
         // like가 true면 like을 새롭게 누른 것, false면 눌렀던 like를 지운 것으로 생각했습니다.
         if (like){
-            comment.setLike_count(comment.getLikeCount() + 1);
+            comment.setLikeCount(comment.getLikeCount() + 1);
         }else{
             if (comment.getLikeCount() > 0){
-                comment.setLike_count(comment.getLikeCount() - 1);
+                comment.setLikeCount(comment.getLikeCount() - 1);
             }
         }
 

@@ -57,7 +57,7 @@ public class Comment {
         this.text = text;
     }
 
-    public void setLike_count(int likeCount) {
+    public void setLikeCount(int likeCount) {
         this.likeCount = likeCount;
     }
 
@@ -79,4 +79,5 @@ public class Comment {
                 .parentId(parentId)
                 .build();
     }
+
 }
