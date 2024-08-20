@@ -1,5 +1,6 @@
 package com.gaplog.server.domain.comment.application;
 
+import com.gaplog.server.domain.caterory.domain.Category;
 import com.gaplog.server.domain.comment.dao.CommentRepository;
 import com.gaplog.server.domain.comment.domain.Comment;
 import com.gaplog.server.domain.comment.dto.response.CommentLikeUpdateResponse;
@@ -19,20 +20,20 @@ import java.util.List;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    //private final PostRepository postRepository;
-    //private final UserRepository userRepository;
 
     @Transactional
-    public CommentResponse createComment(Long postId, Long userId, String text, Long parent) {
+    public CommentResponse createComment(Long postId, Long userId, String text, Long parentId) {
 
         //post, user 각각 Id로 repository 에서 find 해 연결 필요
-        Post post = new Post();
         User user = new User();
+        Category category = Category.of("category",user);
+        Post post = Post.of("title", "content", category, "url", user);
+
         Comment newComment = Comment.builder()
                 .post(post)
                 .user(user)
                 .text(text)
-                .parent(parent)
+                .parentId(parentId)
                 .build();
 
         commentRepository.save(newComment);
