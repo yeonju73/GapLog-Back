@@ -20,7 +20,7 @@ public class CommentLikeUpdateResponse {
     public static CommentLikeUpdateResponse of(Comment comment) {
         return CommentLikeUpdateResponse.builder()
                 .commentId(comment.getId())
-                .likes(comment.getLike_count())
+                .likes(comment.getLikeCount())
                 .build();
     }
 

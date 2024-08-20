@@ -33,10 +33,10 @@ public class Comment {
     private String text;
 
     @Column(name = "parent_id")
-    private Comment parent;
+    private Long parentId;
 
     @Column(name = "like_count", nullable = false)
-    private int like_count = 0;
+    private int likeCount = 0;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -56,17 +56,17 @@ public class Comment {
         this.text = text;
     }
 
-    public void setLike_count(int like_count) {
-        this.like_count = like_count;
+    public void setLike_count(int likeCount) {
+        this.likeCount = likeCount;
     }
 
     //like_count 는 초기값이 명확하게 설정되어 있기 때문에 생성자에서 별도로 지정X
     @Builder
-    public Comment(Long id, Post post, User user, String text, Comment parent) {
+    public Comment(Long id, Post post, User user, String text, Long parentId) {
         this.id = id;
         this.post = post;
         this.user = user;
         this.text = text;
-        this.parent = parent;
+        this.parentId = parentId;
     }
 }
