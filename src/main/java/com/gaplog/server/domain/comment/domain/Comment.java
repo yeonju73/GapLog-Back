@@ -1,5 +1,6 @@
 package com.gaplog.server.domain.comment.domain;
 
+import com.gaplog.server.domain.caterory.domain.Category;
 import com.gaplog.server.domain.post.domain.Post;
 import com.gaplog.server.domain.user.domain.User;
 
@@ -60,13 +61,22 @@ public class Comment {
         this.likeCount = likeCount;
     }
 
-    //like_count 는 초기값이 명확하게 설정되어 있기 때문에 생성자에서 별도로 지정X
+
     @Builder
-    public Comment(Long id, Post post, User user, String text, Long parentId) {
-        this.id = id;
+    public Comment(Post post, User user, String text, Long parentId) {
         this.post = post;
         this.user = user;
         this.text = text;
         this.parentId = parentId;
+        this.likeCount = 0;
+    }
+
+    public static Comment of(Post post, User user, String text, Long parentId) {
+        return Comment.builder()
+                .post(post)
+                .user(user)
+                .text(text)
+                .parentId(parentId)
+                .build();
     }
 }

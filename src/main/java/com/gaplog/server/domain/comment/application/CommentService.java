@@ -6,7 +6,9 @@ import com.gaplog.server.domain.comment.domain.Comment;
 import com.gaplog.server.domain.comment.dto.response.CommentLikeUpdateResponse;
 import com.gaplog.server.domain.comment.dto.response.CommentResponse;
 import com.gaplog.server.domain.comment.dto.response.CommentUpdateResponse;
+import com.gaplog.server.domain.post.dao.PostRepository;
 import com.gaplog.server.domain.post.domain.Post;
+import com.gaplog.server.domain.user.dao.UserRepository;
 import com.gaplog.server.domain.user.domain.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -14,27 +16,28 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
+    private final UserRepository userRepository;
+
 
     @Transactional
     public CommentResponse createComment(Long postId, Long userId, String text, Long parentId) {
 
-        //post, user 각각 Id로 repository 에서 find 해 연결 필요
-        User user = new User();
-        Category category = Category.of("category",user);
-        Post post = Post.of("title", "content", category, "url", user);
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + postId));
 
-        Comment newComment = Comment.builder()
-                .post(post)
-                .user(user)
-                .text(text)
-                .parentId(parentId)
-                .build();
+
+        User user = userRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
+
+        Comment newComment = Comment.of(post, user, text, parentId);
 
         commentRepository.save(newComment);
         return CommentResponse.of(newComment);
