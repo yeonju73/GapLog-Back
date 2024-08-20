@@ -45,12 +45,18 @@ public class Seriousness {
     }
 
     public void updateTier(int seriousnessCount) {
-        if (seriousnessCount >= 3) {
-            this.tier = 3;
-        } else if (seriousnessCount == 2) {
-            this.tier = 2;
+        if (seriousnessCount >= 100) {
+            this.tier = 6; // 브론즈 티어
+        } else if (seriousnessCount >= 80) {
+            this.tier = 5; // 실버 티어
+        } else if (seriousnessCount >= 60) {
+            this.tier = 4; // 골드 티어
+        } else if (seriousnessCount >= 40) {
+            this.tier = 3; // 플레 티어
+        } else if (seriousnessCount >= 20) {
+            this.tier = 2; // 다이어 티어
         } else {
-            this.tier = 1;
+            this.tier = 1; // 루비 티어
         }
         this.localDate = LocalDate.now();
     }
