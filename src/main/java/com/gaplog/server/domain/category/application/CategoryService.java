@@ -5,6 +5,8 @@ import com.gaplog.server.domain.category.domain.Category;
 import com.gaplog.server.domain.category.dao.CategoryRepository;
 import com.gaplog.server.domain.category.domain.ClosureCategory;
 import com.gaplog.server.domain.category.dto.response.CategoryTreeResponse;
+import com.gaplog.server.domain.post.dao.PostRepository;
+import com.gaplog.server.domain.post.domain.Post;
 import com.gaplog.server.domain.user.domain.User;
 import com.gaplog.server.domain.user.dao.UserRepository;
 import org.springframework.stereotype.Service;
@@ -13,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final ClosureCategoryRepository closureCategoryRepository;
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
 
     public List<CategoryTreeResponse> getCategoryTree(Long userId) {
         Optional<User> user = userRepository.findById(userId);
@@ -35,7 +37,7 @@ public class CategoryService {
         List<Category> categories = categoryRepository.findByUser(user.get());
         List<Long> categoryIds = categories.stream()
                 .map(Category::getId)
-                .collect(Collectors.toList());
+                .toList();
 
         // 루트 노드 조회
         List<Long> rootCategoryIds = categoryIds.stream()
@@ -43,7 +45,7 @@ public class CategoryService {
                     Long descendantCount = closureCategoryRepository.countByIdDescendantId(categoryId);
                     return descendantCount == 1;  // 자기 자신만 참조하는 경우 (depth = 0)
                 })
-                .collect(Collectors.toList());
+                .toList();
 
         // depth가 1인 부모-자식 관계 조회
         List<ClosureCategory> closureCategories = closureCategoryRepository.findByIdAncestorIdInAndDepth(categoryIds, 1L);
@@ -66,23 +68,22 @@ public class CategoryService {
         // 루트 노드들의 트리 반환
         return rootCategoryIds.stream()
                 .map(categoryMap::get)
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    public List<Category> getSubCategories(Long categoryId) {
+    public List<Post> getSubCategories(Long categoryId) {
         Optional<Category> categoryOpt = categoryRepository.findById(categoryId);
         if (categoryOpt.isEmpty()) {
             throw new RuntimeException("Category not found with id: " + categoryId);
         }
-        List<ClosureCategory> closureCategories = closureCategoryRepository.findByIdAncestorId(categoryId);
+        List<ClosureCategory> subCategories = closureCategoryRepository.findByIdAncestorId(categoryId);
 
-        return closureCategories.stream()
-                .map(closureCategory -> {
-                    Long descendantId = closureCategory.getId().getDescendantId();
-                    return categoryRepository.findById(descendantId).orElse(null);
+        return subCategories.stream()
+                .flatMap(subCategory -> {
+                    Long descendantId = subCategory.getId().getDescendantId();
+                    return postRepository.findByCategoryId(descendantId).stream();
                 })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public Category addCategory(Long userId, Long parentId, String name) {

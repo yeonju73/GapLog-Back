@@ -5,6 +5,7 @@ import com.gaplog.server.domain.category.dto.request.CategoryUpdateRequest;
 import com.gaplog.server.domain.category.domain.Category;
 import com.gaplog.server.domain.category.application.CategoryService;
 import com.gaplog.server.domain.category.dto.response.CategoryTreeResponse;
+import com.gaplog.server.domain.post.domain.Post;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -33,9 +34,9 @@ public class CategoryApi {
     @GetMapping("/{category_id}")
     @Operation(summary = "카테고리 게시글 조회", description = "카테고리의 게시글 정보를 얻습니다.")
     // To Do: Post Api 완성 후 Post 반환하도록 변경
-    public ResponseEntity<List<Category>> getSubCategories(@PathVariable("category_id") Long categoryId) {
-        List<Category> subCategories = categoryService.getSubCategories(categoryId);
-        return new ResponseEntity<>(subCategories, HttpStatus.OK);
+    public ResponseEntity<List<Post>> getSubCategories(@PathVariable("category_id") Long categoryId) {
+        List<Post> subPosts = categoryService.getSubCategories(categoryId);
+        return new ResponseEntity<>(subPosts, HttpStatus.OK);
     }
 
     @PostMapping("/")
