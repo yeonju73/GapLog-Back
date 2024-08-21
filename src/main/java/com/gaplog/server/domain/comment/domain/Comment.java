@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor
@@ -46,6 +48,14 @@ public class Comment {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    @ElementCollection
+    @CollectionTable(name = "comment_likes", joinColumns = @JoinColumn(name = "comment_id"))
+    @Column(name = "user_id")
+    private Set<Long> likedByUsers = new HashSet<>();
+
+    @Version // Optimistic Locking을 위한 버전 필드
+    private Long version;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
@@ -67,6 +77,16 @@ public class Comment {
 
     public void changeIsDeleted(Boolean isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+    public void toggleLike(Long userId) {
+        if (likedByUsers.contains(userId)) {
+            likedByUsers.remove(userId); // 좋아요 취소
+            likeCount--; // 좋아요 수 감소
+        } else {
+            likedByUsers.add(userId); // 좋아요 추가
+            likeCount++; // 좋아요 수 증가
+        }
     }
 
     @Builder

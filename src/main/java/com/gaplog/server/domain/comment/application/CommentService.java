@@ -81,18 +81,11 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentLikeUpdateResponse updateLikeCount(Long commentId, boolean like) {
+    public CommentLikeUpdateResponse updateLikeCount(Long commentId, Long userId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new EntityNotFoundException("Comment not found with id: " + commentId));
 
-        // like가 true면 like을 새롭게 누른 것, false면 눌렀던 like를 지운 것으로 생각했습니다.
-        if (like){
-            comment.setLikeCount(comment.getLikeCount() + 1);
-        }else{
-            if (comment.getLikeCount() > 0){
-                comment.setLikeCount(comment.getLikeCount() - 1);
-            }
-        }
+        comment.toggleLike(userId); // 좋아요 추가,취소
 
         commentRepository.save(comment);
 
