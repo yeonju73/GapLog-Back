@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
@@ -13,10 +14,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 @Table(
-        name = "seriousness",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"user_id", "post_id"})
-        }
+        name = "seriousness"
+//        ,uniqueConstraints = {@UniqueConstraint(columnNames = "user_id")}
 )
 public class Seriousness {
 
@@ -25,6 +24,7 @@ public class Seriousness {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Setter
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -38,11 +38,13 @@ public class Seriousness {
     @Column(name = "seriousness_count")
     private int seriousnessCount;
 
-    public Seriousness(User user, Post post, int tier) {
+    public Seriousness(User user) {
         this.user = user;
-        this.tier = tier;
+        this.seriousnessCount = 0;
+        this.tier = 1;
         this.localDate = LocalDate.now();
     }
+
 
     public void updateTier(int seriousnessCount) {
         if (seriousnessCount >= 100) {
@@ -54,17 +56,16 @@ public class Seriousness {
         } else if (seriousnessCount >= 40) {
             this.tier = 3; // 플레 티어
         } else if (seriousnessCount >= 20) {
-            this.tier = 2; // 다이어 티어
+            this.tier = 2; // 다이아 티어
         } else {
             this.tier = 1; // 루비 티어
         }
         this.localDate = LocalDate.now();
     }
 
-    public Seriousness(User user) {
-        this.user = user;
-        this.seriousnessCount = 0;
-        this.tier = 1;
-    }
-
 }
+
+
+
+
+

@@ -34,6 +34,7 @@ public class SeriousnessService {
 
     }
 
+
     @Transactional(readOnly = true)
     public List<SeriousnessFieldResponse> getSeriousnessField(Long userId){
         // 유저가 작성한 포스와 진지 버튼 수 반환 (<- 완두밭 만들기 위해서)

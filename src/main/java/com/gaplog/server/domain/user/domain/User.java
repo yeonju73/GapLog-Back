@@ -3,6 +3,7 @@ package com.gaplog.server.domain.user.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Getter
@@ -13,10 +14,10 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(nullable = false)
     private Long id;
 
-    @Column(name = "nickname", nullable = false)
+    @Column(name = "nickname")
     private String nickName;
 
     @Column(name = "introduce")
@@ -28,8 +29,20 @@ public class User {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @Setter
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Seriousness seriousness;
+
+    public User(String nickName, String introduce, String profileImg) {
+        this.nickName = nickName;
+        this.introduce = introduce;
+        this.profileImg = profileImg;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+        Seriousness seriousness = new Seriousness(this);
+        seriousness.setUser(this);
+        this.setSeriousness(seriousness);
+    }
 
     @PrePersist
     protected void onCreate() {

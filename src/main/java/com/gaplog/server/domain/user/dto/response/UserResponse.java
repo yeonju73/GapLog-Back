@@ -27,8 +27,8 @@ public class UserResponse {
                 .nickName(user.getNickName())
                 .introduce(user.getIntroduce())
                 .profileImg(user.getProfileImg())
-                .createdAt(LocalDateTime.parse(user.getCreatedAt().toString()))
-                .updatedAt(LocalDateTime.parse(user.getUpdatedAt().toString()))
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
                 .build();
     }
 
