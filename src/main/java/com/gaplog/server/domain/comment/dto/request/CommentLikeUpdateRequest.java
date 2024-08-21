@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 public class CommentLikeUpdateRequest {
 
     @NotNull
-    private Long id; // 댓글 ID
-
-    @NotNull
     private boolean like;
+
 }

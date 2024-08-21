@@ -1,6 +1,5 @@
 package com.gaplog.server.domain.comment.domain;
 
-import com.gaplog.server.domain.caterory.domain.Category;
 import com.gaplog.server.domain.post.domain.Post;
 import com.gaplog.server.domain.user.domain.User;
 
@@ -11,8 +10,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor
