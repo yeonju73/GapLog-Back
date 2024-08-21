@@ -33,7 +33,7 @@ public class Comment {
     private String text;
 
     @Column(name = "parent_id")
-    private Comment parent;
+    private Long parentId;
 
     @Column(name = "like_count", nullable = false)
     private int like_count = 0;
@@ -67,6 +67,6 @@ public class Comment {
         this.post = post;
         this.user = user;
         this.text = text;
-        this.parent = parent;
+        this.parentId = parent.getId();
     }
 }
