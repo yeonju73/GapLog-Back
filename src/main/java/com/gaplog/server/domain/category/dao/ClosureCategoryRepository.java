@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface ClosureCategoryRepository extends JpaRepository<ClosureCategory, ClosureCategoryId> {
     List<ClosureCategory> findByIdAncestorId(Long ancestorId);
+    List<ClosureCategory> findByIdDescendantId(Long descendantId);
     List<ClosureCategory> findByIdAncestorIdInAndDepth(List<Long> categoryIds, Long depth);
     Long countByIdDescendantId(Long categoryId);
 }

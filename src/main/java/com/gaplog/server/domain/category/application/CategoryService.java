@@ -4,6 +4,7 @@ import com.gaplog.server.domain.category.dao.ClosureCategoryRepository;
 import com.gaplog.server.domain.category.domain.Category;
 import com.gaplog.server.domain.category.dao.CategoryRepository;
 import com.gaplog.server.domain.category.domain.ClosureCategory;
+import com.gaplog.server.domain.category.domain.ClosureCategoryId;
 import com.gaplog.server.domain.category.dto.response.CategoryTreeResponse;
 import com.gaplog.server.domain.post.dao.PostRepository;
 import com.gaplog.server.domain.post.domain.Post;
@@ -86,7 +87,7 @@ public class CategoryService {
                 .toList();
     }
 
-    public Category addCategory(Long userId, Long parentId, String name) {
+    public Category addCategory(Long userId, Long ancestorId, String name) {
         Optional<User> userOpt = userRepository.findById(userId);
         if (userOpt.isEmpty()) {
             throw new RuntimeException("User not found with id: " + userId);
@@ -95,13 +96,20 @@ public class CategoryService {
 
         Category newCategory = Category.of(name, user);
         Category savedCategory = categoryRepository.save(newCategory);
+        
+        // 자기 자신을 자손으로 갖는 노드 저장
+        ClosureCategory selfNodeClosure = ClosureCategory.of(savedCategory,savedCategory,0L);
+        closureCategoryRepository.save(selfNodeClosure);
 
-        Optional<Category> parentCategoryOpt = categoryRepository.findById(parentId);
-        if (parentCategoryOpt.isPresent()) {
-            Category parentCategory = parentCategoryOpt.get();
-            //To Do: depth 계산 로직 추가
-            ClosureCategory closureCategory = ClosureCategory.of(parentCategory, savedCategory, 1L);
-            closureCategoryRepository.save(closureCategory);
+        // 부모 노드의 모든 조상들과 클로저 관계 매핑
+        List<ClosureCategory> allAncestorClosures = closureCategoryRepository.findByIdDescendantId(ancestorId);
+        for (ClosureCategory ancestorClosure : allAncestorClosures) {
+            Long depth = ancestorClosure.getDepth() + 1;
+            ClosureCategory newClosureCategory = ClosureCategory.builder()
+                    .id(new ClosureCategoryId(ancestorClosure.getId().getAncestorId(), savedCategory.getId()))
+                    .depth(depth)
+                    .build();
+            closureCategoryRepository.save(newClosureCategory);
         }
         return savedCategory;
     }
