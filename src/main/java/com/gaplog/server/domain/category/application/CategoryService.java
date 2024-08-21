@@ -29,13 +29,10 @@ public class CategoryService {
     private final PostRepository postRepository;
 
     public List<CategoryTreeResponse> getCategoryTree(Long userId) {
-        Optional<User> user = userRepository.findById(userId);
-        if (user.isEmpty()) {
-            throw new RuntimeException("User not found with id: " + userId);
-        }
+        User user = userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User not found with id: " + userId));
 
         // 유저의 모든 카테고리 id 조회
-        List<Category> categories = categoryRepository.findByUser(user.get());
+        List<Category> categories = categoryRepository.findByUser(user);
         List<Long> categoryIds = categories.stream()
                 .map(Category::getId)
                 .toList();
@@ -73,10 +70,6 @@ public class CategoryService {
     }
 
     public List<Post> getSubCategories(Long categoryId) {
-        Optional<Category> categoryOpt = categoryRepository.findById(categoryId);
-        if (categoryOpt.isEmpty()) {
-            throw new RuntimeException("Category not found with id: " + categoryId);
-        }
         List<ClosureCategory> subCategories = closureCategoryRepository.findByIdAncestorId(categoryId);
 
         return subCategories.stream()
@@ -88,11 +81,7 @@ public class CategoryService {
     }
 
     public Category addCategory(Long userId, Long ancestorId, String name) {
-        Optional<User> userOpt = userRepository.findById(userId);
-        if (userOpt.isEmpty()) {
-            throw new RuntimeException("User not found with id: " + userId);
-        }
-        User user = userOpt.get();
+        User user = userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User not found with id: " + userId));
 
         Category newCategory = Category.of(name, user);
         Category savedCategory = categoryRepository.save(newCategory);
@@ -115,12 +104,7 @@ public class CategoryService {
     }
 
     public void updateCategory(Long categoryId, Long ancestorId) {
-        Optional<Category> categoryOpt = categoryRepository.findById(categoryId);
-        if (categoryOpt.isEmpty()) {
-            throw new RuntimeException("Category not found with id: " + categoryId);
-        }
-
-        Category category = categoryOpt.get();
+        Category category = categoryRepository.findById(categoryId).orElseThrow(()-> new RuntimeException("Category not found with id: " + categoryId));
 
         Optional<Category> ancestorCategoryOpt = categoryRepository.findById(ancestorId);
         if (ancestorCategoryOpt.isEmpty()) {
@@ -134,14 +118,15 @@ public class CategoryService {
 
 
     public void deleteCategory(Long categoryId) {
-        Optional<Category> categoryOpt = categoryRepository.findById(categoryId);
-        if (categoryOpt.isEmpty()) {
-            throw new RuntimeException("Category not found with id: " + categoryId);
-        }
+        // 자신을 포함한 자손들의 모든 조상과의 연결 관계 삭제
+        List<ClosureCategory> allDescendantClosures = closureCategoryRepository.findByIdAncestorId(categoryId);
+        for(ClosureCategory descendantClosure : allDescendantClosures) {
+            Long descendantId = descendantClosure.getId().getDescendantId();
+            List<ClosureCategory> allAncestorClosures = closureCategoryRepository.findByIdDescendantId(descendantId);
+            closureCategoryRepository.deleteAll(allAncestorClosures);
 
-        Category category = categoryOpt.get();
-        List<ClosureCategory> closureCategories = closureCategoryRepository.findByIdAncestorId(categoryId);
-        closureCategoryRepository.deleteAll(closureCategories);
-        categoryRepository.delete(category);
+            Category deleteCategory = categoryRepository.findById(descendantId).orElseThrow(() -> new RuntimeException("Category not found with id: " + descendantId));
+            categoryRepository.delete(deleteCategory);
+        }
     }
 }
