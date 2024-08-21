@@ -86,36 +86,30 @@ public class CategoryService {
         Category newCategory = Category.of(name, user);
         Category savedCategory = categoryRepository.save(newCategory);
         
-        // 자기 자신을 자손으로 갖는 노드 저장
-        ClosureCategory selfNodeClosure = ClosureCategory.of(savedCategory,savedCategory,0L);
+        saveCategory(savedCategory, ancestorId);
+        return savedCategory;
+    }
+
+    private void saveCategory(Category category, Long ancestorId) {
+        ClosureCategory selfNodeClosure = ClosureCategory.of(category,category,0L);
         closureCategoryRepository.save(selfNodeClosure);
 
-        // 부모 노드의 모든 조상들과 클로저 관계 매핑
         List<ClosureCategory> allAncestorClosures = closureCategoryRepository.findByIdDescendantId(ancestorId);
         for (ClosureCategory ancestorClosure : allAncestorClosures) {
             Long depth = ancestorClosure.getDepth() + 1;
             ClosureCategory newClosureCategory = ClosureCategory.builder()
-                    .id(new ClosureCategoryId(ancestorClosure.getId().getAncestorId(), savedCategory.getId()))
+                    .id(new ClosureCategoryId(ancestorClosure.getId().getAncestorId(), category.getId()))
                     .depth(depth)
                     .build();
             closureCategoryRepository.save(newClosureCategory);
         }
-        return savedCategory;
     }
 
     public void updateCategory(Long categoryId, Long ancestorId) {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(()-> new RuntimeException("Category not found with id: " + categoryId));
-
-        Optional<Category> ancestorCategoryOpt = categoryRepository.findById(ancestorId);
-        if (ancestorCategoryOpt.isEmpty()) {
-            throw new RuntimeException("Ancestor category not found with id: " + ancestorId);
-        }
-
-        Category ancestorCategory = ancestorCategoryOpt.get();
-
-        //To Do: 수정 로직 세부 구현
+        deleteCategory(categoryId);
+        Category category = categoryRepository.findById(categoryId).orElseThrow(()->new RuntimeException("Category not found with id: " + categoryId));
+        saveCategory(category, ancestorId);
     }
-
 
     public void deleteCategory(Long categoryId) {
         // 자신을 포함한 자손들의 모든 조상과의 연결 관계 삭제
