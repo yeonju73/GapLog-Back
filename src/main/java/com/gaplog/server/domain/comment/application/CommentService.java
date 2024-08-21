@@ -1,6 +1,5 @@
 package com.gaplog.server.domain.comment.application;
 
-import com.gaplog.server.domain.caterory.domain.Category;
 import com.gaplog.server.domain.comment.dao.CommentRepository;
 import com.gaplog.server.domain.comment.domain.Comment;
 import com.gaplog.server.domain.comment.dto.response.CommentLikeUpdateResponse;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -57,13 +55,29 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new EntityNotFoundException("Comment not found with id: " + commentId));
 
-        //임시적으로 부모 댓글이 삭제되면 자식 댓글도 삭제되는 로직으로 구현
         List<Comment> childComments = commentRepository.findByParentId(commentId);
-        if (!childComments.isEmpty()) {
-            commentRepository.deleteAll(childComments);
+        //삭제하려는 댓글에게 자식 댓글이 있을 때 IsDeleted 상태만 변경
+        //삭제하려는 댓글의 id를 parentId로 갖고 있는 댓글 list
+        if(!childComments.isEmpty()) {
+            comment.changeIsDeleted(true);
+            commentRepository.save(comment);
         }
+        else { //자식 댓글이 없을 때 댓글 삭제
 
-        commentRepository.delete(comment);
+            // 현재 삭제하려는 댓글에게 부모댓글이 있고,
+            // 부모 댓글이 자식이 1개(지금 삭제하는 댓글)이고,
+            // 부모가 이미 삭제상태인 댓글이라면 (isDeleted == true 라면)
+            Comment parentComment;
+            if (comment.getParentId() != null) {
+                parentComment = commentRepository.findById(comment.getParentId())
+                        .orElseThrow(() -> new EntityNotFoundException("Parent not found with id: " + comment.getParentId()));
+
+                if((childComments.size() == 1) && parentComment.getIsDeleted()){
+                    commentRepository.delete(parentComment);
+                }
+            }
+            commentRepository.delete(comment);
+        }
     }
 
     @Transactional

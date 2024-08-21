@@ -8,8 +8,11 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -39,6 +42,10 @@ public class Comment {
     @Column(name = "like_count", nullable = false)
     private int likeCount = 0;
 
+    @ColumnDefault("FALSE")
+    @Column(nullable = false)
+    private Boolean isDeleted;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -61,6 +68,9 @@ public class Comment {
         this.likeCount = likeCount;
     }
 
+    public void changeIsDeleted(Boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
 
     @Builder
     public Comment(Post post, User user, String text, Long parentId) {

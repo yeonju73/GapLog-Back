@@ -25,9 +25,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     //특정 게시글의 댓글 수 조회
     long countByPostId(Long postId);
 
-    //특정 comment 의 모든 자식 comment 삭제
-    void deleteByParentId(Long parentId);
-
     //특정 post의 comment 삭제
     void deleteByPostId(Long postId);
 

@@ -1,5 +1,6 @@
 package com.gaplog.server.domain.comment.dto.request;
 
+import com.gaplog.server.domain.comment.domain.Comment;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -21,4 +22,5 @@ public class CommentRequest {
     private String text;
 
     private Long parentId;
+
 }
