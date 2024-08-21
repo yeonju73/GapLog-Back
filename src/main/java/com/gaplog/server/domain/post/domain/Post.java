@@ -8,10 +8,11 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.*;
 
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Entity
 public class Post {
 
@@ -30,10 +31,10 @@ public class Post {
     private Category category;
 
     //content
-    @Column(length = 100)
+    @Column
     private String title;
 
-    @Column(length = 100)
+    @Column(length = 10000)
     private String content;
 
 //    @Column(length = 45)

@@ -1,6 +1,5 @@
 package com.gaplog.server.domain.user.domain;
 
-public class User {
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
