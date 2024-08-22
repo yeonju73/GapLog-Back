@@ -1,4 +1,4 @@
-package com.gaplog.server.domain.caterory.domain;
+package com.gaplog.server.domain.category.domain;
 
 import com.gaplog.server.domain.user.domain.User;
 import jakarta.persistence.*;

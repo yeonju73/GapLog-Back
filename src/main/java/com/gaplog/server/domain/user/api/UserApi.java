@@ -1,6 +1,5 @@
 package com.gaplog.server.domain.user.api;
 
-import com.gaplog.server.domain.caterory.domain.Category;
 import com.gaplog.server.domain.user.application.UserService;
 import com.gaplog.server.domain.user.domain.User;
 import com.gaplog.server.domain.user.dto.request.UserUpdateRequest;
@@ -12,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Tag(name = "User", description = "User API")
 @RestController

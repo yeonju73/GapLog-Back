@@ -1,6 +1,6 @@
-package com.gaplog.server.domain.caterory.dao;
+package com.gaplog.server.domain.category.dao;
 
-import com.gaplog.server.domain.caterory.domain.Category;
+import com.gaplog.server.domain.category.domain.Category;
 import com.gaplog.server.domain.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
