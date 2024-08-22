@@ -3,6 +3,8 @@ package com.gaplog.server.domain.user.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+
 import java.time.LocalDateTime;
 
 @Getter
@@ -30,6 +32,12 @@ public class User {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Seriousness seriousness;
+
+    // Category Test를 위해 임시로 추가
+    public User(Long l, String user) {
+        this.id = l;
+        this.nickName = user;
+    }
 
     @PrePersist
     protected void onCreate() {
