@@ -85,20 +85,23 @@ public class CategoryService {
 
         Category newCategory = Category.of(name, user);
         Category savedCategory = categoryRepository.save(newCategory);
-        
-        saveCategory(savedCategory, ancestorId);
+
+        saveSelfNode(savedCategory);
+        if(ancestorId > 0) saveCategory(savedCategory.getId(), ancestorId);
         return savedCategory;
     }
 
-    private void saveCategory(Category category, Long ancestorId) {
+    private void saveSelfNode(Category category){
         ClosureCategory selfNodeClosure = ClosureCategory.of(category,category,0L);
         closureCategoryRepository.save(selfNodeClosure);
+    }
 
+    private void saveCategory(Long categoryId, Long ancestorId) {
         List<ClosureCategory> allAncestorClosures = closureCategoryRepository.findByIdDescendantId(ancestorId);
         for (ClosureCategory ancestorClosure : allAncestorClosures) {
             Long depth = ancestorClosure.getDepth() + 1;
             ClosureCategory newClosureCategory = ClosureCategory.builder()
-                    .id(new ClosureCategoryId(ancestorClosure.getId().getAncestorId(), category.getId()))
+                    .id(new ClosureCategoryId(ancestorClosure.getId().getAncestorId(), categoryId))
                     .depth(depth)
                     .build();
             closureCategoryRepository.save(newClosureCategory);
@@ -108,7 +111,8 @@ public class CategoryService {
     public void updateCategory(Long categoryId, Long ancestorId) {
         deleteCategory(categoryId);
         Category category = categoryRepository.findById(categoryId).orElseThrow(()->new RuntimeException("Category not found with id: " + categoryId));
-        saveCategory(category, ancestorId);
+        saveSelfNode(category);
+        if(ancestorId > 0) saveCategory(category.getId(), ancestorId);
     }
 
     public void deleteCategory(Long categoryId) {
