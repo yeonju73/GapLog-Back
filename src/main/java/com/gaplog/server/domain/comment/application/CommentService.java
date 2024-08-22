@@ -1,6 +1,6 @@
 package com.gaplog.server.domain.comment.application;
 
-import com.gaplog.server.domain.caterory.domain.Category;
+import com.gaplog.server.domain.category.domain.Category;
 import com.gaplog.server.domain.comment.dao.CommentRepository;
 import com.gaplog.server.domain.comment.domain.Comment;
 import com.gaplog.server.domain.comment.dto.response.CommentLikeUpdateResponse;
