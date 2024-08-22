@@ -1,6 +1,8 @@
 package com.gaplog.server.domain.user.application;
 
+import com.gaplog.server.domain.user.dao.SeriousnessRepository;
 import com.gaplog.server.domain.user.dao.UserRepository;
+import com.gaplog.server.domain.user.domain.Seriousness;
 import com.gaplog.server.domain.user.domain.User;
 import com.gaplog.server.domain.user.dto.request.UserUpdateRequest;
 import com.gaplog.server.domain.user.dto.response.UserResponse;
@@ -13,10 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
-
-    public User createUser(User user) {
-        return userRepository.save(user);
-    }
 
     @Transactional(readOnly=true)
     public UserResponse getUserInfo(Long userId){

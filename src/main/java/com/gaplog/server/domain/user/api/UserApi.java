@@ -1,6 +1,7 @@
 package com.gaplog.server.domain.user.api;
 
 import com.gaplog.server.domain.user.application.UserService;
+import com.gaplog.server.domain.user.dao.UserRepository;
 import com.gaplog.server.domain.user.domain.User;
 import com.gaplog.server.domain.user.dto.request.UserUpdateRequest;
 import com.gaplog.server.domain.user.dto.response.UserResponse;
@@ -17,15 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class UserApi {
-    // auth로 원래 유저 가입해야하는데 UserRelationship 확인위해 user 생성 메소드 추가
     private final UserService userService;
-
-    @PostMapping
-    public ResponseEntity<User> creatUser(@RequestBody User user){
-        User createUser = userService.createUser(user);
-        return ResponseEntity.ok(createUser);
-
-    }
 
     @Operation(summary = "유저 정보 수정", description = "유저의 정보를 수정합니다.")
     @PutMapping("/{user_id}")
