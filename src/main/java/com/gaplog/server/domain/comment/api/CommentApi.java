@@ -9,6 +9,7 @@ import com.gaplog.server.domain.comment.dto.response.CommentResponse;
 import com.gaplog.server.domain.comment.dto.response.CommentUpdateResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class CommentApi {
         try{
             CommentResponse response = commentService.createComment(request.getPostId(), request.getUserId(), request.getText(), request.getParentId());
             return new ResponseEntity<>(response, HttpStatus.OK);
-        }catch (RuntimeException e){
+        }catch (EntityNotFoundException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -39,7 +40,7 @@ public class CommentApi {
         try{
             CommentUpdateResponse response = commentService.updateComment(commentId, request.getText());
             return new ResponseEntity<>(response, HttpStatus.OK);
-        }catch (RuntimeException e){
+        }catch (EntityNotFoundException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -50,7 +51,7 @@ public class CommentApi {
         try{
             commentService.deleteComment(comment_id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch (RuntimeException e){
+        }catch (EntityNotFoundException e){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }

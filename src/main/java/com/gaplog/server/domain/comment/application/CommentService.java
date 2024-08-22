@@ -56,27 +56,39 @@ public class CommentService {
                 .orElseThrow(() -> new EntityNotFoundException("Comment not found with id: " + commentId));
 
         List<Comment> childComments = commentRepository.findByParentId(commentId);
-        //삭제하려는 댓글에게 자식 댓글이 있을 때 IsDeleted 상태만 변경
-        //삭제하려는 댓글의 id를 parentId로 갖고 있는 댓글 list
+
+        // Soft Delete
+        // isDeleted == true 라면 댓글이 사용자에게 노출되지 않음
+        // 하지만 repository 상에서 삭제 되진 않음
+
+        // case 1: 부모 댓글 : 자식 댓글이 1개 이상 있는  -> isDeletedParent = ture
+        // case 2: 부모 댓글 : 자식 댓글이 없는 (대댓글이 없는 댓글) -> isDeleted = true
+        // case 3: 자식 댓글  -> isDeleted = true & 부모 댓글의 유일한 댓글인지 검사
+        // -> 부모 댓글의 childComments 의 크키가 1이라면, 부모 댓글의 isDeleted = true & 둘 다 save
+
+        // case 1: 삭제하려는 댓글에게 자식 댓글이 있을 때
         if(!childComments.isEmpty()) {
-            comment.changeIsDeleted(true);
+            comment.setDeletedParent(true);
             commentRepository.save(comment);
         }
-        else { //자식 댓글이 없을 때 댓글 삭제
+        else { // 삭제하려는 댓글에게 자식 댓글이 없을 때
 
-            // 현재 삭제하려는 댓글에게 부모댓글이 있고,
-            // 부모 댓글이 자식이 1개(지금 삭제하는 댓글)이고,
-            // 부모가 이미 삭제상태인 댓글이라면 (isDeleted == true 라면)
             Comment parentComment;
+
+            // 삭제하려는 댓글에게 부모 댓글이 있을 때
             if (comment.getParentId() != null) {
                 parentComment = commentRepository.findById(comment.getParentId())
                         .orElseThrow(() -> new EntityNotFoundException("Parent not found with id: " + comment.getParentId()));
 
-                if((childComments.size() == 1) && parentComment.getIsDeleted()){
-                    commentRepository.delete(parentComment);
+                // case 3: 부모 댓글의 자식이 1개(지금 삭제하는 댓글)이며, 부모가 이미 삭제상태인 댓글
+                if((childComments.size() == 1) && parentComment.getIsDeletedParent()){
+                    parentComment.setDeleted(true);
+                    commentRepository.save(parentComment);
                 }
             }
-            commentRepository.delete(comment);
+            //case 2 & case 3의 자식 댓글 setDeleted
+            comment.setDeleted(true);
+            commentRepository.save(comment);
         }
     }
 
@@ -85,8 +97,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new EntityNotFoundException("Comment not found with id: " + commentId));
 
-        comment.toggleLike(userId); // 좋아요 추가,취소
-
+        comment.toggleLike(userId); // 좋아요 추가, 취소
         commentRepository.save(comment);
 
         return CommentLikeUpdateResponse.of(comment);

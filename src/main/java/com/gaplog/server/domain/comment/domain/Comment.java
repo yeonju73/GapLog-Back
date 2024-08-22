@@ -45,6 +45,10 @@ public class Comment {
     @Column(nullable = false)
     private Boolean isDeleted;
 
+    @ColumnDefault("FALSE")
+    @Column(nullable = false)
+    private Boolean isDeletedParent;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -75,8 +79,12 @@ public class Comment {
         this.likeCount = likeCount;
     }
 
-    public void changeIsDeleted(Boolean isDeleted) {
-        this.isDeleted = isDeleted;
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public void setDeletedParent(Boolean deletedParent) {
+        isDeletedParent = deletedParent;
     }
 
     public void toggleLike(Long userId) {
