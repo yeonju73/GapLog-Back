@@ -31,6 +31,10 @@ public class UserRelationships {
     @JoinColumn(name = "followee_id", nullable = false)
     private User followee;
 
+    // 낙관적 lock
+    @Version
+    private Integer version;
+
 
     public UserRelationships(User follower, User followee) {
         this.follower = follower;

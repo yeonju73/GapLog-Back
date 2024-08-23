@@ -5,6 +5,7 @@ import com.gaplog.server.domain.user.dao.UserRepository;
 import com.gaplog.server.domain.user.domain.User;
 import com.gaplog.server.domain.user.domain.UserRelationships;
 import com.gaplog.server.domain.user.dto.UserRelationshipsDto;
+import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,13 +18,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserRelationshipsService {
 
-    private final UserRelationshipsRepository userRelationshipsRepo;
+    private final UserRelationshipsRepository userRelationships;
     private  final UserRepository userRepository;
 
     @Transactional(readOnly=true)
     public List<UserRelationshipsDto> getFollowers(Long userId) {
 
-        List<UserRelationships> followers = userRelationshipsRepo.findAllByFolloweeId(userId);
+        List<UserRelationships> followers = userRelationships.findAllByFolloweeId(userId);
 
         return followers.stream()
                 .map(UserRelationshipsDto::of)
@@ -32,7 +33,7 @@ public class UserRelationshipsService {
 
     @Transactional(readOnly=true)
     public List<UserRelationshipsDto> getFollowees(Long userId) {
-        List<UserRelationships> followees = userRelationshipsRepo.findAllByFolloweeId(userId);
+        List<UserRelationships> followees = userRelationships.findAllByFolloweeId(userId);
 
         return followees.stream()
                 .map(UserRelationshipsDto::of)
@@ -41,14 +42,18 @@ public class UserRelationshipsService {
 
     @Transactional
     public String updateFollow(Long userId, Long targetId, String action) {
-        if ("follow".equals(action)) {
-            followUser(userId, targetId);
-            return "follower: " + userId + " followee: " + targetId;
-        } else if ("unfollow".equals(action)) {
-            unfollowUser(userId, targetId);
-            return "follower: " + userId + " followee: " + targetId;
-        } else {
-            throw new IllegalArgumentException("Invalid action: " + action);
+        try{
+            if ("follow".equals(action)) {
+                followUser(userId, targetId);
+                return "follower: " + userId + " followee: " + targetId;
+            } else if ("unfollow".equals(action)) {
+                unfollowUser(userId, targetId);
+                return "follower: " + userId + " followee: " + targetId;
+            } else {
+                throw new IllegalArgumentException("Invalid action: " + action);
+            }
+        } catch (OptimisticLockException e) {
+            throw new RuntimeException("Conflict detected while updating follow relationships.", e);
         }
     }
 
@@ -59,7 +64,7 @@ public class UserRelationshipsService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid followee ID: " + targetId));
 
         UserRelationships relationship = new UserRelationships(follower, followee);
-        userRelationshipsRepo.save(relationship);
+        userRelationships.save(relationship);
     }
 
     private void unfollowUser(Long userId, Long targetId) {
@@ -69,6 +74,6 @@ public class UserRelationshipsService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid followee ID: " + targetId));
 
         UserRelationships relationship = new UserRelationships(follower, followee);
-        userRelationshipsRepo.delete(relationship);
+        userRelationships.delete(relationship);
     }
 }
