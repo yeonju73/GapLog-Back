@@ -73,8 +73,11 @@ public class PostService {
         }
 
         Post post = postOpt.get();
+        //soft Delete
+        post.updateIsDeleted();
 
-        postRepository.delete(post);
+        //hard Delete
+        //postRepository.delete(post);
     }
 
 
@@ -167,6 +170,11 @@ public class PostService {
         }
         else{
             post.decreaseJinjiCount();
+        }
+
+        //isPrivate 게시물 비공개
+        if(post.getJinjiCount()==4){
+            post.updateIsPrivate();
         }
 
         Post updatedPost = postRepository.save(post);

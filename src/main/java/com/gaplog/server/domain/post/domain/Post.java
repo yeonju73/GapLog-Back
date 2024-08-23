@@ -40,7 +40,7 @@ public class Post {
 //    @Column(length = 45)
 //    private String category;
 
-    @Column(length = 100)
+    @Column
     private String thumbnailUrl;
 
 
@@ -68,6 +68,13 @@ public class Post {
 
     @Column
     private int scrapCount;
+
+
+    @Column
+    private boolean isPrivate;
+
+    @Column
+    private boolean isDeleted;
 
 
     @PrePersist
@@ -126,6 +133,14 @@ public class Post {
         this.scrapCount--;
     }
 
+    public void updateIsPrivate() {
+        this.isPrivate = true;
+    }
+
+    public void updateIsDeleted() {
+        this.isDeleted = true;
+    }
+
     @Builder
     public Post(String title, String content, Category category, String thumbnailUrl, User user) {
         this.title = title;
@@ -136,6 +151,8 @@ public class Post {
         this.likeCount = 0;
         this.jinjiCount = 0;
         this.scrapCount = 0;
+        this.isPrivate = false;
+        this.isDeleted = false;
         this.user = user;
     }
 
