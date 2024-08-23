@@ -59,9 +59,8 @@ public class CommentApi {
     @PutMapping("/{comment_id}/likes")
     @Operation(summary = "댓글 좋아요 수 수정", description = "댓글의 좋아요 수를 수정합니다.")
     public ResponseEntity<CommentLikeUpdateResponse> updateLikeCount(@PathVariable ("comment_id") Long commentId, @RequestBody CommentLikeUpdateRequest request) {
-        try{//Authorization 헤더에서 userid 토큰을 추출 하는 방법도
-            //근데 저능해서 아직 모르겠음
-            CommentLikeUpdateResponse response = commentService.updateLikeCount(commentId, request.getUserId());
+        try{
+            CommentLikeUpdateResponse response = commentService.updateLikeCount(commentId, request.isLike());
             return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (RuntimeException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

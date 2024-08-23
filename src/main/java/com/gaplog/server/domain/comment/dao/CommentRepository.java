@@ -30,4 +30,5 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     // 특정 사용자의 댓글 삭제
     void deleteByUserId(Long userId);
+
 }

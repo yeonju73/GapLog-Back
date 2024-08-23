@@ -10,8 +10,11 @@ import com.gaplog.server.domain.post.domain.Post;
 import com.gaplog.server.domain.user.dao.UserRepository;
 import com.gaplog.server.domain.user.domain.User;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.LockModeType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -93,12 +96,24 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentLikeUpdateResponse updateLikeCount(Long commentId, Long userId) {
+    public CommentLikeUpdateResponse updateLikeCount(Long commentId, boolean like) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new EntityNotFoundException("Comment not found with id: " + commentId));
 
-        comment.toggleLike(userId); // 좋아요 추가, 취소
-        commentRepository.save(comment);
+        if (like){
+            comment.setLikeCount(comment.getLikeCount() + 1);
+        }else{
+            if (comment.getLikeCount() > 0){
+                comment.setLikeCount(comment.getLikeCount() - 1);
+            }
+        }
+        try {
+            commentRepository.save(comment);
+        } catch (OptimisticLockingFailureException e) {
+            // 충돌이 발생한 경우에 대한 처리 로직
+            // 해당 트랜잭션은 롤백되며, 좋아요 업데이트 요청은 적용되지 않고 무시됩니다.
+            throw new IllegalStateException("Unable to update like count due to concurrent modification", e);
+        }
 
         return CommentLikeUpdateResponse.of(comment);
     }
