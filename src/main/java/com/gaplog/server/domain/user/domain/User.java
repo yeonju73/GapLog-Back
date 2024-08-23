@@ -33,7 +33,7 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Seriousness seriousness;
 
-    // Category Test를 위해 임시로 추가
+    // Category Test를 위해 임시로 추가, Oauth로그인 구현 시 변경
     public User(Long l, String user) {
         this.id = l;
         this.nickName = user;
