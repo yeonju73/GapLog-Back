@@ -29,6 +29,10 @@ public class User {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    // false 가 삭제되지 않은 상태 (기본값)
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted = false;
+
     @Setter
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Seriousness seriousness;
@@ -67,6 +71,11 @@ public class User {
 
     public void updateProfileImg(String profileImg) {
         this.profileImg = profileImg;
+        this.onUpdate();
+    }
+
+    public void deleteUser() {
+        this.deleted = true;
         this.onUpdate();
     }
 }

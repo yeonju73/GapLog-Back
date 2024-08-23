@@ -63,4 +63,14 @@ public class UserService {
         List<Comment> comments = commentRepository.findByUserId(userId);
         return comments.stream().map(CommentResponse::of).collect(Collectors.toList());
     }
+
+    @Transactional
+    public void deleteUser(Long userId) {
+        User user = userRepository.findActiveUserById(userId).orElseThrow(()
+                -> new IllegalArgumentException("Invalid user ID: " + userId));
+
+        user.deleteUser();
+        userRepository.save(user);
+
+    }
 }
