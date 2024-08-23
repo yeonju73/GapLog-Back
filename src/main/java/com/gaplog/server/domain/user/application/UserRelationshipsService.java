@@ -44,6 +44,10 @@ public class UserRelationshipsService {
     public String updateFollow(Long userId, Long targetId, String action) {
         try{
             if ("follow".equals(action)) {
+                // 중복 팔로우 검사
+                if (userRelationships.existsByFollowerIdAndFolloweeId(userId, targetId)) {
+                    throw new IllegalStateException("Already following this user.");
+                }
                 followUser(userId, targetId);
                 return "follower: " + userId + " followee: " + targetId;
             } else if ("unfollow".equals(action)) {

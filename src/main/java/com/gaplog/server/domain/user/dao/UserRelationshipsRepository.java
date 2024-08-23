@@ -7,6 +7,5 @@ import java.util.List;
 
 public interface UserRelationshipsRepository extends JpaRepository <UserRelationships, Long> {
     List<UserRelationships> findAllByFolloweeId(Long followeeId);
-
-
+    boolean existsByFollowerIdAndFolloweeId(Long userId, Long targetId);
 }
