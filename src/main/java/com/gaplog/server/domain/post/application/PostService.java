@@ -4,10 +4,7 @@ import com.gaplog.server.domain.caterory.dao.CategoryRepository;
 import com.gaplog.server.domain.caterory.domain.Category;
 import com.gaplog.server.domain.post.dao.PostRepository;
 import com.gaplog.server.domain.post.domain.Post;
-import com.gaplog.server.domain.post.dto.request.PostJinjiUpdateRequest;
-import com.gaplog.server.domain.post.dto.request.PostLikeUpdateRequest;
-import com.gaplog.server.domain.post.dto.request.PostScrapUpdateRequest;
-import com.gaplog.server.domain.post.dto.request.PostUpdateRequest;
+import com.gaplog.server.domain.post.dto.request.*;
 import com.gaplog.server.domain.post.dto.response.*;
 import com.gaplog.server.domain.user.dao.UserRepository;
 import com.gaplog.server.domain.user.domain.User;
@@ -55,12 +52,37 @@ public class PostService {
         Post post = postRepository.findById(postId).orElseThrow(()
                 ->new IllegalArgumentException("Post not found: " + postId));
 
+        Optional<Category> categoryOpt = categoryRepository.findById(postUpdateRequestDTO.getCategoryId());
+        if (categoryOpt.isEmpty()) {
+            throw new RuntimeException("User not found with id: " + postUpdateRequestDTO.getCategoryId());
+        }
+        Category category = categoryOpt.get();
+
+        post.updateCategory(category);
         post.updateTitle(postUpdateRequestDTO.getTitle());
         post.updateContent(postUpdateRequestDTO.getContent());
 
         Post updatedPost = postRepository.save(post);
         return PostUpdateResponse.of(updatedPost);
     }
+
+//    //post category 수정
+//    @Transactional
+//    public void updatePostCategory(Long postId, PostCategoryUpdateRequest postCategoryUpdateRequestDTO) {
+//        Post post = postRepository.findById(postId).orElseThrow(()
+//                ->new IllegalArgumentException("Post not found: " + postId));
+//
+//        Optional<Category> categoryOpt = categoryRepository.findById(postCategoryUpdateRequestDTO.getCategoryId());
+//        if (categoryOpt.isEmpty()) {
+//            throw new RuntimeException("User not found with id: " + postCategoryUpdateRequestDTO.getCategoryId());
+//        }
+//        Category category = categoryOpt.get();
+//
+//        post.updateCategory(category);
+//        postRepository.save(post);
+//
+//        return;
+//    }
 
     //post 삭제
     /*To-Do
@@ -162,6 +184,7 @@ public class PostService {
     }
 
     //진지 수정
+    //3..까지만 저장된다..
     @Transactional
     public PostJinjiUpdateResponse PostJinjiUpdate(Long postId, PostJinjiUpdateRequest postJinjiUpdateRequestDTO) {
         Post post = postRepository.findById(postId).orElseThrow(()

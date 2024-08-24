@@ -103,11 +103,6 @@ public class Post {
         this.updatedAt = LocalDateTime.now();
     }
 
-//    public void updateCategory(String category) {
-//        this.category = category;
-//        this.updatedAt = LocalDateTime.now();
-//    }
-//
 //    public void updateThumbnail(String thumbnailUrl) {
 //        this.thumbnailUrl = thumbnailUrl;
 //        this.updatedAt = LocalDateTime.now();
