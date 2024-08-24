@@ -98,6 +98,11 @@ public class Post {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public void updateCategory(Category category) {
+        this.category = category;
+        this.updatedAt = LocalDateTime.now();
+    }
+
 //    public void updateCategory(String category) {
 //        this.category = category;
 //        this.updatedAt = LocalDateTime.now();
@@ -132,6 +137,7 @@ public class Post {
     public void decreaseScrapCount() {
         this.scrapCount--;
     }
+
 
     public void updateIsPrivate() {
         this.isPrivate = true;

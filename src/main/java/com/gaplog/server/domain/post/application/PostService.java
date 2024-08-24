@@ -73,9 +73,10 @@ public class PostService {
         }
 
         Post post = postOpt.get();
+
         //soft Delete
         post.updateIsDeleted();
-
+        postRepository.save(post);
         //hard Delete
         //postRepository.delete(post);
     }
@@ -165,7 +166,7 @@ public class PostService {
     public PostJinjiUpdateResponse PostJinjiUpdate(Long postId, PostJinjiUpdateRequest postJinjiUpdateRequestDTO) {
         Post post = postRepository.findById(postId).orElseThrow(()
                 ->new IllegalArgumentException("Post not found: " + postId));
-        if(postJinjiUpdateRequestDTO.isJinji()){
+        if(postJinjiUpdateRequestDTO.isJinji()&&post.getJinjiCount()<4){
             post.increaseJinjiCount();
         }
         else{
