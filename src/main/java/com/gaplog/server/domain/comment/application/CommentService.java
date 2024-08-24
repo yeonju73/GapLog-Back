@@ -1,7 +1,9 @@
 package com.gaplog.server.domain.comment.application;
 
+import com.gaplog.server.domain.comment.dao.CommentLikeRepository;
 import com.gaplog.server.domain.comment.dao.CommentRepository;
 import com.gaplog.server.domain.comment.domain.Comment;
+import com.gaplog.server.domain.comment.domain.CommentLike;
 import com.gaplog.server.domain.comment.dto.response.CommentLikeUpdateResponse;
 import com.gaplog.server.domain.comment.dto.response.CommentResponse;
 import com.gaplog.server.domain.comment.dto.response.CommentUpdateResponse;
@@ -24,7 +26,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-
+    private final CommentLikeRepository commentLikeRepository;
 
     @Transactional
     public CommentResponse createComment(Long postId, Long userId, String text, Long parentId) {
@@ -94,25 +96,36 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentLikeUpdateResponse updateLikeCount(Long commentId, boolean like) {
+    public CommentLikeUpdateResponse updateLikeCount(Long userId, Long commentId) throws InterruptedException{
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
+
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new EntityNotFoundException("Comment not found with id: " + commentId));
 
-        if (like){
-            comment.setLikeCount(comment.getLikeCount() + 1);
-        }else{
+        //좋아요가 이미 눌러져 있을때, delete Comment Like
+        if (commentLikeRepository.existsByUserIdAndCommentId(userId, commentId)){
+            commentLikeRepository.deleteByUserIdAndCommentId(userId,commentId);
+
             if (comment.getLikeCount() > 0){
                 comment.setLikeCount(comment.getLikeCount() - 1);
             }
-        }
-        try {
-            commentRepository.save(comment);
-        } catch (OptimisticLockingFailureException e) {
-            // 충돌이 발생한 경우에 대한 처리 로직
-            // 해당 트랜잭션은 롤백되며, 좋아요 업데이트 요청은 적용되지 않고 무시됩니다.
-            throw new IllegalStateException("Unable to update like count due to concurrent modification", e);
+        } //좋아요가 없을때, save Comment Like
+        else{
+            CommentLike commentLike = CommentLike.of(user, comment);
+            commentLikeRepository.save(commentLike);
+
+            comment.setLikeCount(comment.getLikeCount() + 1);
         }
 
-        return CommentLikeUpdateResponse.of(comment);
+        while (true) {
+            try {
+                commentRepository.save(comment);
+                return CommentLikeUpdateResponse.of(comment);
+            } catch (OptimisticLockingFailureException e) {
+                // 충돌이 발생한 경우에 대한 처리 로직
+                Thread.sleep(30);
+            }
+        }
     }
 }

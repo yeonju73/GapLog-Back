@@ -60,9 +60,11 @@ public class CommentApi {
     @Operation(summary = "댓글 좋아요 수 수정", description = "댓글의 좋아요 수를 수정합니다.")
     public ResponseEntity<CommentLikeUpdateResponse> updateLikeCount(@PathVariable ("comment_id") Long commentId, @RequestBody CommentLikeUpdateRequest request) {
         try{
-            CommentLikeUpdateResponse response = commentService.updateLikeCount(commentId, request.isLike());
+            CommentLikeUpdateResponse response = commentService.updateLikeCount(request.getUserId(), commentId);
             return new ResponseEntity<>(response, HttpStatus.OK);
-        }catch (RuntimeException e){
+        }catch (EntityNotFoundException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (InterruptedException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
