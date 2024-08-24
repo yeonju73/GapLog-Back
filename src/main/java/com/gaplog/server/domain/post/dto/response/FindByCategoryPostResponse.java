@@ -29,7 +29,7 @@ public class FindByCategoryPostResponse {
                 .title(post.getTitle())
                 .thumbnailUrl(post.getThumbnailUrl())
                 .likeCount(post.getLikeCount())
-                .jinjiCount(post.getJinjiCount())
+                .jinjiCount(post.getSeriousnessCount())
                 .createdAt(LocalDateTime.parse(post.getCreatedAt().toString()))
                 .updatedAt(LocalDateTime.parse(post.getUpdatedAt().toString()))
                 .build();

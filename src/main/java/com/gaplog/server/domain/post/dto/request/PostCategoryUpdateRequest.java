@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostJinjiUpdateRequest {
-    //private Long postId;
-    private boolean jinji;
+public class PostCategoryUpdateRequest {
+    private Long categoryId;
 }

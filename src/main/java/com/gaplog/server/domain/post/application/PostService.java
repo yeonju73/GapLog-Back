@@ -186,23 +186,23 @@ public class PostService {
     //진지 수정
     //3..까지만 저장된다..
     @Transactional
-    public PostJinjiUpdateResponse PostJinjiUpdate(Long postId, PostJinjiUpdateRequest postJinjiUpdateRequestDTO) {
+    public PostSeriousnessUpdateResponse PostSeriousnessUpdate(Long postId, PostSeriousnessUpdateRequest postJinjiUpdateRequestDTO) {
         Post post = postRepository.findById(postId).orElseThrow(()
                 ->new IllegalArgumentException("Post not found: " + postId));
-        if(postJinjiUpdateRequestDTO.isJinji()&&post.getJinjiCount()<4){
-            post.increaseJinjiCount();
+        if(postJinjiUpdateRequestDTO.isSeriousness()&&post.getSeriousnessCount()<4){
+            post.increaseSeriousnessCount();
         }
         else{
-            post.decreaseJinjiCount();
+            post.decreaseSeriousnessCount();
         }
 
         //isPrivate 게시물 비공개
-        if(post.getJinjiCount()==4){
+        if(post.getSeriousnessCount()==4){
             post.updateIsPrivate();
         }
 
         Post updatedPost = postRepository.save(post);
-        return PostJinjiUpdateResponse.of(updatedPost);
+        return PostSeriousnessUpdateResponse.of(updatedPost);
     }
 
     //스크랩 수정

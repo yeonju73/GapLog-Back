@@ -64,7 +64,7 @@ public class Post {
     private int likeCount;
 
     @Column
-    private int jinjiCount;
+    private int SeriousnessCount;
 
     @Column
     private int scrapCount;
@@ -114,7 +114,7 @@ public class Post {
         this.likeCount++;
     }
 
-    public void increaseJinjiCount() {this.jinjiCount++;}
+    public void increaseSeriousnessCount() {this.SeriousnessCount++;}
 
     public void increaseScrapCount() {
         this.scrapCount++;
@@ -125,8 +125,8 @@ public class Post {
         this.likeCount--;
     }
 
-    public void decreaseJinjiCount() {
-        this.jinjiCount--;
+    public void decreaseSeriousnessCount() {
+        this.SeriousnessCount--;
     }
 
     public void decreaseScrapCount() {
@@ -150,7 +150,7 @@ public class Post {
         this.thumbnailUrl = thumbnailUrl;
         onCreate();
         this.likeCount = 0;
-        this.jinjiCount = 0;
+        this.SeriousnessCount = 0;
         this.scrapCount = 0;
         this.isPrivate = false;
         this.isDeleted = false;

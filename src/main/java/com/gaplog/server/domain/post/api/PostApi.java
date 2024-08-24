@@ -5,7 +5,6 @@ import com.gaplog.server.domain.post.application.PostService;
 import com.gaplog.server.domain.post.domain.Post;
 import com.gaplog.server.domain.post.dto.request.*;
 import com.gaplog.server.domain.post.dto.response.*;
-import com.gaplog.server.domain.user.dto.response.UserResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -55,10 +54,10 @@ public class PostApi {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{post_id}/jinjis")
+    @PutMapping("/{post_id}/seriousness")
     @Operation(summary = "게시글 진지 수정", description = "게시글의 진지수를 수정합니다.")
-    public ResponseEntity<PostJinjiUpdateResponse> putJinjiUpdatePost(@PathVariable ("post_id") Long postId, @RequestBody PostJinjiUpdateRequest request) {
-        PostJinjiUpdateResponse response = postService.PostJinjiUpdate(postId, request);
+    public ResponseEntity<PostSeriousnessUpdateResponse> putJSeriousnessUpdatePost(@PathVariable ("post_id") Long postId, @RequestBody PostSeriousnessUpdateRequest request) {
+        PostSeriousnessUpdateResponse response = postService.PostSeriousnessUpdate(postId, request);
         return ResponseEntity.ok(response);
     }
 

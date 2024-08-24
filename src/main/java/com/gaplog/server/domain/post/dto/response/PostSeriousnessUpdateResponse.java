@@ -10,15 +10,15 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostJinjiUpdateResponse {
+public class PostSeriousnessUpdateResponse {
 
     private Long id;
-    private int jinjiCount;
+    private int seriousnessCount;
 
-    public static PostJinjiUpdateResponse of(Post post) {
-        return PostJinjiUpdateResponse.builder()
+    public static PostSeriousnessUpdateResponse of(Post post) {
+        return PostSeriousnessUpdateResponse.builder()
                 .id(post.getId())
-                .jinjiCount(post.getJinjiCount())
+                .seriousnessCount(post.getSeriousnessCount())
                 .build();
     }
 }
