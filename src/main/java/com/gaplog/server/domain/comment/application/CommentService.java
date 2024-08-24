@@ -84,7 +84,7 @@ public class CommentService {
                         .orElseThrow(() -> new EntityNotFoundException("Parent not found with id: " + comment.getParentId()));
 
                 // case 3: 부모 댓글의 자식이 1개(지금 삭제하는 댓글)이며, 부모가 이미 삭제상태인 댓글
-                if((childComments.size() == 1) && parentComment.getIsDeletedParent()){
+                if(((commentRepository.findByParentId(parentComment.getId())).size() == 1) && parentComment.getIsDeletedParent()){
                     parentComment.setDeleted(true);
                     commentRepository.save(parentComment);
                 }

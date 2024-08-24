@@ -9,6 +9,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     List<Comment> findByPostId(Long postId);
 
+    //특정 부모 댓글에 대한 모든 자식 댓글을 조회
     List<Comment> findByParentId(Long parentId);
 
     List<Comment> findByUserId(Long userId);
