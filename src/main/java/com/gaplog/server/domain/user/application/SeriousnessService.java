@@ -10,8 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,9 +41,18 @@ public class SeriousnessService {
     public List<SeriousnessFieldResponse> getSeriousnessField(Long userId){
         // 유저가 작성한 포스와 진지 버튼 수 반환 (<- 완두밭 만들기 위해서)
         List<Post> posts = postRepository.findByUserId(userId);
-        return posts.stream().map(post -> new SeriousnessFieldResponse(post.getCreatedAt().toLocalDate(),
-                post.getJinjiCount())).collect(Collectors.toList());
+        Map<LocalDate, List<Post>> postsByDate = posts.stream()
+                .collect(Collectors.groupingBy(post -> post.getCreatedAt().toLocalDate()));
 
+        return postsByDate.entrySet().stream()
+                .map(entry -> {
+                    LocalDate date = entry.getKey();
+                    List<Post> postsOnDate = entry.getValue();
+                    int seriousnessCount = postsOnDate.stream().mapToInt(Post::getJinjiCount).sum();
+                    int postCount = postsOnDate.size();
+                    return new SeriousnessFieldResponse(date, seriousnessCount, postCount);
+                })
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

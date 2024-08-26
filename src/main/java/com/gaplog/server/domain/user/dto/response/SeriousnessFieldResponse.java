@@ -13,9 +13,11 @@ import java.time.LocalDate;
 public class SeriousnessFieldResponse {
     private LocalDate date;
     private int seriousnessCount;
+    private int postCount;
 
-    public SeriousnessFieldResponse(LocalDate date, int seriousnessCount) {
+    public SeriousnessFieldResponse(LocalDate date, int seriousnessCount, int postCount) {
         this.date = date;
         this.seriousnessCount = seriousnessCount;
+        this.postCount = postCount;
     }
 }
