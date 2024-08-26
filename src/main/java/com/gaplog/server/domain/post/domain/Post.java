@@ -81,6 +81,11 @@ public class Post {
     private boolean isDeleted;
 
 
+    //낙관적락
+    @Column
+    @Version
+    private Long version;
+
     @PrePersist
     protected void onCreate(){
         this.createdAt = LocalDateTime.now();
@@ -158,6 +163,7 @@ public class Post {
         this.scrapCount = 0;
         this.isPrivate = false;
         this.isDeleted = false;
+        this.version = 0L;
         this.user = user;
     }
 
