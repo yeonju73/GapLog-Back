@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -15,10 +16,10 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(nullable = false)
     private Long id;
 
-    @Column(name = "nickname", nullable = false)
+    @Column(name = "nickname")
     private String nickName;
 
     @Column(name = "introduce")
@@ -30,7 +31,8 @@ public class User {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @Setter
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Seriousness seriousness;
 
     // Category Test를 위해 임시로 추가, Oauth로그인 구현 시 변경
