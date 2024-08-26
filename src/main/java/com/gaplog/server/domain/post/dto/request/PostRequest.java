@@ -13,5 +13,5 @@ public class PostRequest {
     private String content;
     private Long category;
     private String thumbnailUrl;
-    private User user;
+    private Long user;
 }

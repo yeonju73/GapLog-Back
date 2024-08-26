@@ -25,7 +25,7 @@ public class PostApi {
     @PutMapping("/")
     @Operation(summary = "게시글 작성", description = "게시글을 작성합니다.")
     public ResponseEntity<Post> putPost(@RequestBody PostRequest request) {
-        Post response = postService.createPost(request.getUser().getId(), request.getTitle(), request.getContent(), request.getThumbnailUrl(), request.getCategory());
+        Post response = postService.createPost(request.getUser(), request.getTitle(), request.getContent(), request.getThumbnailUrl(), request.getCategory());
         return ResponseEntity.ok(response);
     }
 
@@ -71,7 +71,7 @@ public class PostApi {
 
     @GetMapping("/{post_id}")
     @Operation(summary = "특정 게시글 조회", description = "특정 게시글을 조회합니다.")
-    public ResponseEntity<SelectedPostResponse> getSelectedPost(@PathVariable ("post_id") Long postId, @RequestBody PostUpdateRequest request) {
+    public ResponseEntity<SelectedPostResponse> getSelectedPost(@PathVariable ("post_id") Long postId) {
         SelectedPostResponse response = postService.getSelectedPostInfo(postId);
         return ResponseEntity.ok(response);
     }
