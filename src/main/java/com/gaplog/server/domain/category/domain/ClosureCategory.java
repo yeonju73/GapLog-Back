@@ -1,10 +1,7 @@
-package com.gaplog.server.domain.caterory.domain;
+package com.gaplog.server.domain.category.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
@@ -15,15 +12,15 @@ public class ClosureCategory {
     private ClosureCategoryId id;
 
     @Column(nullable = false)
-    private Integer depth;
+    private Long depth;
 
     @Builder
-    public ClosureCategory(ClosureCategoryId id, Integer depth) {
+    public ClosureCategory(ClosureCategoryId id, Long depth) {
         this.id = id;
         this.depth = depth;
     }
 
-    public static ClosureCategory of(Category ancestor, Category descendant, Integer depth) {
+    public static ClosureCategory of(Category ancestor, Category descendant, Long depth) {
         return ClosureCategory.builder()
                 .id(new ClosureCategoryId(ancestor.getId(), descendant.getId()))
                 .depth(depth)

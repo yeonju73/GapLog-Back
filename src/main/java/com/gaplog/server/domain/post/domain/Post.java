@@ -1,6 +1,6 @@
 package com.gaplog.server.domain.post.domain;
 
-import com.gaplog.server.domain.caterory.domain.Category;
+import com.gaplog.server.domain.category.domain.Category;
 import com.gaplog.server.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Entity
 public class Post {
     @Id
@@ -46,6 +46,7 @@ public class Post {
 
     @Column
     private int scrapCount;
+
 
 
     @PrePersist

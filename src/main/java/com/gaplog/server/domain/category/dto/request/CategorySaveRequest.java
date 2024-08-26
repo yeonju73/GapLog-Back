@@ -1,4 +1,4 @@
-package com.gaplog.server.domain.caterory.dto.request;
+package com.gaplog.server.domain.category.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

@@ -36,16 +36,17 @@ public class Comment {
     @Column(name = "parent_id")
     private Long parentId;
 
+    @ColumnDefault("0")
     @Column(name = "like_count", nullable = false)
     private int likeCount = 0;
 
     @ColumnDefault("FALSE")
-    @Column(nullable = false)
-    private Boolean isDeleted;
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted = false;
 
     @ColumnDefault("FALSE")
-    @Column(nullable = false)
-    private Boolean isDeletedParent;
+    @Column(name = "is_deleted_parent", nullable = false)
+    private Boolean isDeletedParent = false;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -87,7 +88,6 @@ public class Comment {
         this.user = user;
         this.text = text;
         this.parentId = parentId;
-        this.likeCount = 0;
     }
 
     public static Comment of(Post post, User user, String text, Long parentId) {
