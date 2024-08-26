@@ -82,9 +82,7 @@ public class CategoryService {
 
     public Category addCategory(Long userId, Long ancestorId, String name) {
         User user = userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User not found with id: " + userId));
-
-        Category newCategory = Category.of(name, user);
-        Category savedCategory = categoryRepository.save(newCategory);
+        Category savedCategory = categoryRepository.save(Category.of(name, user));
 
         saveSelfNode(savedCategory);
         if(ancestorId > 0) saveCategory(savedCategory.getId(), ancestorId);
@@ -92,8 +90,7 @@ public class CategoryService {
     }
 
     private void saveSelfNode(Category category){
-        ClosureCategory selfNodeClosure = ClosureCategory.of(category,category,0L);
-        closureCategoryRepository.save(selfNodeClosure);
+        closureCategoryRepository.save(ClosureCategory.of(category,category,0L));
     }
 
     private void saveCategory(Long categoryId, Long ancestorId) {
@@ -108,11 +105,10 @@ public class CategoryService {
         }
     }
 
-    public void updateCategory(Long categoryId, Long ancestorId) {
-        deleteCategory(categoryId);
+    public Category updateCategory(Long categoryId, Long ancestorId) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(()->new RuntimeException("Category not found with id: " + categoryId));
-        saveSelfNode(category);
-        if(ancestorId > 0) saveCategory(category.getId(), ancestorId);
+        deleteCategory(categoryId);
+        return addCategory(category.getUser().getId(), ancestorId, category.getName());
     }
 
     public void deleteCategory(Long categoryId) {
