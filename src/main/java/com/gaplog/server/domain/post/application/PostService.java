@@ -189,8 +189,10 @@ public class PostService {
     public PostSeriousnessUpdateResponse PostSeriousnessUpdate(Long postId, PostSeriousnessUpdateRequest postJinjiUpdateRequestDTO) {
         Post post = postRepository.findById(postId).orElseThrow(()
                 ->new IllegalArgumentException("Post not found: " + postId));
-        if(postJinjiUpdateRequestDTO.isSeriousness()&&post.getSeriousnessCount()<4){
-            post.increaseSeriousnessCount();
+        if(postJinjiUpdateRequestDTO.isSeriousness()){
+            if(post.getSeriousnessCount()<4){
+                post.increaseSeriousnessCount();
+            }
         }
         else{
             post.decreaseSeriousnessCount();
