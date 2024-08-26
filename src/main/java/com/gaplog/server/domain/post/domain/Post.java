@@ -5,7 +5,9 @@ import com.gaplog.server.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -14,6 +16,8 @@ import java.util.*;
 @Setter
 @NoArgsConstructor
 @Entity
+@SQLDelete(sql = "UPDATE post SET is_deleted = true WHERE id = ?")
+@Where(clause = "is_deleted = false")
 public class Post {
 
     //pk

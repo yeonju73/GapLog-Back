@@ -96,11 +96,11 @@ public class PostService {
 
         Post post = postOpt.get();
 
-        //soft Delete
-        post.updateIsDeleted();
-        postRepository.save(post);
-        //hard Delete
-        //postRepository.delete(post);
+        try{
+            postRepository.delete(post);
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 
