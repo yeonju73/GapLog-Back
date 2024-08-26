@@ -48,9 +48,9 @@ public class CategoryApi {
 
     @PutMapping("/")
     @Operation(summary = "카테고리 수정", description = "카테고리를 수정합니다.")
-    public ResponseEntity<Void> updateCategory(@RequestBody CategoryUpdateRequest request) {
-        categoryService.updateCategory(request.getCategoryId(), request.getAncestorId());
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Category> updateCategory(@RequestBody CategoryUpdateRequest request) {
+        Category updatedCategory = categoryService.updateCategory(request.getCategoryId(), request.getAncestorId());
+        return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
     }
 
     @DeleteMapping("/{category_id}")

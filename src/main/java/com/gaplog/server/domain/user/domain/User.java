@@ -3,7 +3,9 @@ package com.gaplog.server.domain.user.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Getter
@@ -33,15 +35,10 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Seriousness seriousness;
 
-    public User(String nickName, String introduce, String profileImg) {
-        this.nickName = nickName;
-        this.introduce = introduce;
-        this.profileImg = profileImg;
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-        Seriousness seriousness = new Seriousness(this);
-        seriousness.setUser(this);
-        this.setSeriousness(seriousness);
+    // Category Test를 위해 임시로 추가, Oauth로그인 구현 시 변경
+    public User(Long l, String user) {
+        this.id = l;
+        this.nickName = user;
     }
 
     @PrePersist
