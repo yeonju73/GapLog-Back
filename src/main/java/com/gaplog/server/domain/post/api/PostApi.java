@@ -76,16 +76,16 @@ public class PostApi {
         return ResponseEntity.ok(response);
     }
 
-//    @GetMapping("/")
-//    @Operation(summary = "메인 페이지 게시글 조회", description = "메인 페이지에 뜨는 게시글의 정보를 얻습니다.")
-//    public ResponseEntity<List<MainPostResponse>> getMainPost() {
-//        try {
-//            List<MainPostResponse> posts = postService.getMainPostInfo();
-//            return new ResponseEntity<>(posts, HttpStatus.OK);
-//        } catch (RuntimeException e) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
+    @GetMapping("/")
+    @Operation(summary = "메인 페이지 게시글 조회", description = "메인 페이지에 뜨는 게시글의 정보를 얻습니다.")
+    public ResponseEntity<List<MainPostResponse>> getMainPost() {
+        try {
+            List<MainPostResponse> posts = postService.getMainPostInfo();
+            return new ResponseEntity<>(posts, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
 
     //?@RequestParam Stirng keyword

@@ -9,6 +9,7 @@ import com.gaplog.server.domain.post.dto.response.*;
 import com.gaplog.server.domain.user.dao.UserRepository;
 import com.gaplog.server.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -106,12 +107,15 @@ public class PostService {
 
     //조회 기능
     //메인화면 게시글 조회
-//    @Transactional
-//    public MainPostResponse getMainPostInfo() {
-//        Post getMainPostInfo = postRepository.setMainPage().orElseThrow(()
-//                ->new IllegalArgumentException("Wrong Access"));
-//        return List<MainPostResponse>.of(getMainPostInfo);
-//    }
+    @Transactional
+    public List<MainPostResponse> getMainPostInfo() {
+        List<Post> posts = postRepository.findTop20ByOrderByCreatedAtDesc(PageRequest.of(0, 20));
+
+        // Post 엔티티를 PostResponse DTO로 변환
+        return posts.stream()
+                .map(MainPostResponse::of)
+                .collect(Collectors.toList());
+    }
 
     //특정 게시물(선택된 게시물) 조회
     @Transactional
