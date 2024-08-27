@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -35,11 +36,23 @@ public class Comment {
     @Column(name = "parent_id")
     private Long parentId;
 
+    @ColumnDefault("0")
     @Column(name = "like_count", nullable = false)
     private int likeCount = 0;
 
+    @ColumnDefault("FALSE")
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted = false;
+
+    @ColumnDefault("FALSE")
+    @Column(name = "is_deleted_parent", nullable = false)
+    private Boolean isDeletedParent = false;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    @Version // Optimistic Locking을 위한 버전 필드
+    private Long version;
 
     @PrePersist
     protected void onCreate() {
@@ -56,17 +69,34 @@ public class Comment {
         this.text = text;
     }
 
-    public void setLike_count(int likeCount) {
+    public void setLikeCount(int likeCount) {
         this.likeCount = likeCount;
     }
 
-    //like_count 는 초기값이 명확하게 설정되어 있기 때문에 생성자에서 별도로 지정X
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public void setDeletedParent(Boolean deletedParent) {
+        isDeletedParent = deletedParent;
+    }
+
+
     @Builder
-    public Comment(Long id, Post post, User user, String text, Long parentId) {
-        this.id = id;
+    public Comment(Post post, User user, String text, Long parentId) {
         this.post = post;
         this.user = user;
         this.text = text;
         this.parentId = parentId;
     }
+
+    public static Comment of(Post post, User user, String text, Long parentId) {
+        return Comment.builder()
+                .post(post)
+                .user(user)
+                .text(text)
+                .parentId(parentId)
+                .build();
+    }
+
 }

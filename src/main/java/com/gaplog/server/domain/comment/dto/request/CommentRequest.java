@@ -21,4 +21,5 @@ public class CommentRequest {
     private String text;
 
     private Long parentId;
+
 }

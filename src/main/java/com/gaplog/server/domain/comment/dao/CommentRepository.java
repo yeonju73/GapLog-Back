@@ -9,6 +9,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     List<Comment> findByPostId(Long postId);
 
+    //특정 부모 댓글에 대한 모든 자식 댓글을 조회
     List<Comment> findByParentId(Long parentId);
 
     List<Comment> findByUserId(Long userId);
@@ -25,12 +26,10 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     //특정 게시글의 댓글 수 조회
     long countByPostId(Long postId);
 
-    //특정 comment 의 모든 자식 comment 삭제
-    void deleteByParentId(Long parentId);
-
     //특정 post의 comment 삭제
     void deleteByPostId(Long postId);
 
     // 특정 사용자의 댓글 삭제
     void deleteByUserId(Long userId);
+
 }
