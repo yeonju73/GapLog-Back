@@ -1,6 +1,6 @@
 package com.gaplog.server.domain.post.domain;
 
-import com.gaplog.server.domain.caterory.domain.Category;
+import com.gaplog.server.domain.category.domain.Category;
 import com.gaplog.server.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,7 +8,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
-
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -19,13 +18,10 @@ import java.util.*;
 @SQLDelete(sql = "UPDATE post SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted = false")
 public class Post {
-
-    //pk
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //fk
     @ManyToOne // Many = Post, User = One 한명의 유저는 여러개의 게시글을 쓸 수 있다.
     @JoinColumn(name="user_id") // foreign key (user_id) references User (id)
     private User user;  //참조할 테이블
@@ -41,27 +37,12 @@ public class Post {
     @Column(length = 10000)
     private String content;
 
-//    @Column(length = 45)
-//    private String category;
-
-    @Column
+    @Column(length = 100)
     private String thumbnailUrl;
-
-
-    //time
-//    @Column(length = 100)
-//    @CreationTimestamp
-//    private String created_at;
-//
-//    @Column(length = 100)
-//    @UpdateTimestamp
-//    private String updated_at;
-
 
     //time
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
 
     //count
     @Column
@@ -73,15 +54,12 @@ public class Post {
     @Column
     private int scrapCount;
 
-
     @Column
     private boolean isPrivate;
 
     @Column
     private boolean isDeleted;
 
-
-    //낙관적락
     @Column
     @Version
     private Long version;
@@ -112,13 +90,6 @@ public class Post {
         this.updatedAt = LocalDateTime.now();
     }
 
-//    public void updateThumbnail(String thumbnailUrl) {
-//        this.thumbnailUrl = thumbnailUrl;
-//        this.updatedAt = LocalDateTime.now();
-//    }
-
-
-    //반응 수 증가
     public void increaseLikeCount() {
         this.likeCount++;
     }
@@ -129,7 +100,6 @@ public class Post {
         this.scrapCount++;
     }
 
-    //반응 수 증가
     public void decreaseLikeCount() {
         this.likeCount--;
     }

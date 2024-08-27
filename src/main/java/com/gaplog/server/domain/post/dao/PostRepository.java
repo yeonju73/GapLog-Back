@@ -16,4 +16,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("SELECT p FROM Post p ORDER BY p.createdAt DESC")
     List<Post> findTop20ByOrderByCreatedAtDesc(Pageable pageable);
     List<Post> findByTitleContainingOrContentContaining(String titleKeyword, String contentKeyword);
+    // 특정 유저가 작성한 게시물 조회
+    List<Post> findByUserId(Long userId);
 }

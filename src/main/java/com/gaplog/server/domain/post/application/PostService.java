@@ -1,7 +1,7 @@
 package com.gaplog.server.domain.post.application;
 
-import com.gaplog.server.domain.caterory.dao.CategoryRepository;
-import com.gaplog.server.domain.caterory.domain.Category;
+import com.gaplog.server.domain.category.dao.CategoryRepository;
+import com.gaplog.server.domain.category.domain.Category;
 import com.gaplog.server.domain.post.dao.PostRepository;
 import com.gaplog.server.domain.post.domain.Post;
 import com.gaplog.server.domain.post.dto.request.*;

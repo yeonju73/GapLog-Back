@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 
 @Builder
 @Getter
@@ -20,7 +19,7 @@ public class CommentLikeUpdateResponse {
     public static CommentLikeUpdateResponse of(Comment comment) {
         return CommentLikeUpdateResponse.builder()
                 .commentId(comment.getId())
-                .likes(comment.getLike_count())
+                .likes(comment.getLikeCount())
                 .build();
     }
 
