@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 
 @Builder
 @Getter
-@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
 public class PostUpdateResponse {
     private Long id;
     private LocalDateTime updatedAt;

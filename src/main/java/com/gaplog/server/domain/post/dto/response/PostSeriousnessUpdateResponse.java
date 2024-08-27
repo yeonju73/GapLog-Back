@@ -10,14 +10,15 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostLikeUpdateResponse {
-    private Long id;
-    private int likeCount;
+public class PostSeriousnessUpdateResponse {
 
-    public static PostLikeUpdateResponse of(Post post) {
-        return PostLikeUpdateResponse.builder()
+    private Long id;
+    private int seriousnessCount;
+
+    public static PostSeriousnessUpdateResponse of(Post post) {
+        return PostSeriousnessUpdateResponse.builder()
                 .id(post.getId())
-                .likeCount(post.getLikeCount())
+                .seriousnessCount(post.getSeriousnessCount())
                 .build();
     }
 }

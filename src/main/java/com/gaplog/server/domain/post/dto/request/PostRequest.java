@@ -6,12 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
 public class PostRequest {
     private String title;
     private String content;
     private Long category;
     private String thumbnailUrl;
-    private User user;
+    private Long user;
 }

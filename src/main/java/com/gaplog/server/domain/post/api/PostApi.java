@@ -25,7 +25,7 @@ public class PostApi {
     @PutMapping("/")
     @Operation(summary = "게시글 작성", description = "게시글을 작성합니다.")
     public ResponseEntity<Post> putPost(@RequestBody PostRequest request) {
-        Post response = postService.createPost(request.getUser().getId(), request.getTitle(), request.getContent(), request.getThumbnailUrl(), request.getCategory());
+        Post response = postService.createPost(request.getUser(), request.getTitle(), request.getContent(), request.getThumbnailUrl(), request.getCategory());
         return ResponseEntity.ok(response);
     }
 
@@ -54,10 +54,10 @@ public class PostApi {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{post_id}/jinjis")
+    @PutMapping("/{post_id}/seriousness")
     @Operation(summary = "게시글 진지 수정", description = "게시글의 진지수를 수정합니다.")
-    public ResponseEntity<PostJinjiUpdateResponse> putJinjiUpdatePost(@PathVariable ("post_id") Long postId, @RequestBody PostJinjiUpdateRequest request) {
-        PostJinjiUpdateResponse response = postService.PostJinjiUpdate(postId, request);
+    public ResponseEntity<PostSeriousnessUpdateResponse> putJSeriousnessUpdatePost(@PathVariable ("post_id") Long postId, @RequestBody PostSeriousnessUpdateRequest request) {
+        PostSeriousnessUpdateResponse response = postService.PostSeriousnessUpdate(postId, request);
         return ResponseEntity.ok(response);
     }
 
@@ -71,21 +71,21 @@ public class PostApi {
 
     @GetMapping("/{post_id}")
     @Operation(summary = "특정 게시글 조회", description = "특정 게시글을 조회합니다.")
-    public ResponseEntity<SelectedPostResponse> getSelectedPost(@PathVariable ("post_id") Long postId, @RequestBody PostUpdateRequest request) {
+    public ResponseEntity<SelectedPostResponse> getSelectedPost(@PathVariable ("post_id") Long postId) {
         SelectedPostResponse response = postService.getSelectedPostInfo(postId);
         return ResponseEntity.ok(response);
     }
 
-//    @GetMapping("/")
-//    @Operation(summary = "메인 페이지 게시글 조회", description = "메인 페이지에 뜨는 게시글의 정보를 얻습니다.")
-//    public ResponseEntity<List<MainPostResponse>> getMainPost() {
-//        try {
-//            List<MainPostResponse> posts = postService.getMainPostInfo();
-//            return new ResponseEntity<>(posts, HttpStatus.OK);
-//        } catch (RuntimeException e) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
+    @GetMapping("/")
+    @Operation(summary = "메인 페이지 게시글 조회", description = "메인 페이지에 뜨는 게시글의 정보를 얻습니다.")
+    public ResponseEntity<List<MainPostResponse>> getMainPost() {
+        try {
+            List<MainPostResponse> posts = postService.getMainPostInfo();
+            return new ResponseEntity<>(posts, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
 
     //?@RequestParam Stirng keyword

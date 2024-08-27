@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostScrapUpdateRequest {
-    //private Long postId;
-    private boolean scrap;
+public class PostCategoryUpdateRequest {
+    private Long categoryId;
 }

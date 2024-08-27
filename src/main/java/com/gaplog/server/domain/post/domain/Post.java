@@ -4,12 +4,19 @@ import com.gaplog.server.domain.category.domain.Category;
 import com.gaplog.server.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.Where;
 import java.time.LocalDateTime;
+import java.util.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
+@SQLDelete(sql = "UPDATE post SET is_deleted = true WHERE id = ?")
+@Where(clause = "is_deleted = false")
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,10 +31,10 @@ public class Post {
     private Category category;
 
     //content
-    @Column(length = 100)
+    @Column
     private String title;
 
-    @Column(length = 100)
+    @Column(length = 10000)
     private String content;
 
     @Column(length = 100)
@@ -42,12 +49,20 @@ public class Post {
     private int likeCount;
 
     @Column
-    private int jinjiCount;
+    private int SeriousnessCount;
 
     @Column
     private int scrapCount;
 
+    @Column
+    private boolean isPrivate;
 
+    @Column
+    private boolean isDeleted;
+
+    @Column
+    @Version
+    private Long version;
 
     @PrePersist
     protected void onCreate(){
@@ -70,28 +85,40 @@ public class Post {
         this.updatedAt = LocalDateTime.now();
     }
 
-    //반응 수 증가
+    public void updateCategory(Category category) {
+        this.category = category;
+        this.updatedAt = LocalDateTime.now();
+    }
+
     public void increaseLikeCount() {
         this.likeCount++;
     }
 
-    public void increaseJinjiCount() {this.jinjiCount++;}
+    public void increaseSeriousnessCount() {this.SeriousnessCount++;}
 
     public void increaseScrapCount() {
         this.scrapCount++;
     }
 
-    //반응 수 증가
     public void decreaseLikeCount() {
         this.likeCount--;
     }
 
-    public void decreaseJinjiCount() {
-        this.jinjiCount--;
+    public void decreaseSeriousnessCount() {
+        this.SeriousnessCount--;
     }
 
     public void decreaseScrapCount() {
         this.scrapCount--;
+    }
+
+
+    public void updateIsPrivate() {
+        this.isPrivate = true;
+    }
+
+    public void updateIsDeleted() {
+        this.isDeleted = true;
     }
 
     @Builder
@@ -102,8 +129,11 @@ public class Post {
         this.thumbnailUrl = thumbnailUrl;
         onCreate();
         this.likeCount = 0;
-        this.jinjiCount = 0;
+        this.SeriousnessCount = 0;
         this.scrapCount = 0;
+        this.isPrivate = false;
+        this.isDeleted = false;
+        this.version = 0L;
         this.user = user;
     }
 
