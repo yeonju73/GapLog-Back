@@ -71,4 +71,4 @@ jobs:
             docker pull ghcr.io/yunuo46/gaplog:latest
             docker stop gaplog || true
             docker rm gaplog || true
-            docker run -d --name gaplog -p 3000:3000 ghcr.io/yunuo46/gaplog:latest
+            docker run -d --name gaplog -p 3000:8080 ghcr.io/yunuo46/gaplog:latest
