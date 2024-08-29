@@ -13,8 +13,6 @@ import com.gaplog.server.domain.category.dto.request.CategoryUpdateRequest;
 import com.gaplog.server.domain.category.dto.response.CategoryTreeResponse;
 import com.gaplog.server.domain.user.domain.User;
 import com.gaplog.server.domain.user.dao.UserRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
