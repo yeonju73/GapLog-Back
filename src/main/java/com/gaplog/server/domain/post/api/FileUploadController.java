@@ -14,11 +14,11 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class FileUploadController {
 
-    private final FileStorageService fileStorageService;
-
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
-        String fileUrl = fileStorageService.storeFile(file);
-        return ResponseEntity.ok(fileUrl);
-    }
+//    private final FileStorageService fileStorageService;
+//
+//    @PostMapping("/upload")
+//    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+//        String fileUrl = fileStorageService.storeFile(file);
+//        return ResponseEntity.ok(fileUrl);
+//    }
 }
