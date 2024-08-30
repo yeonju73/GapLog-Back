@@ -19,15 +19,22 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostScrapService {
     private final PostScrapRepository postScrapRepository;
+    private final PostRepository postRepository;
 
     @Transactional(readOnly = true)
     public List<PostScrapResponse> getScrapPosts(Long userId) {
-        // Next: post aggregate 완성되면 postId 반환되도록 수정 필요
-
+        // 유저가 스크랩한 PostScrap 리스트를 가져옴
         List<PostScrap> postScraps = postScrapRepository.findAllByUserId(userId);
+
+        // 스크랩한 게시물의 포스트 정보 반환
         return postScraps.stream()
-                .map(postScrap -> PostScrapResponse.of(postScrap.getId()))
+                .map(postScrap -> {
+                    Post post = postRepository.findById(postScrap.getPost().getId())
+                            .orElseThrow(() -> new IllegalArgumentException("Invalid post ID: " + postScrap.getPost().getId()));
+                    return PostScrapResponse.of(postScrap.getId(), post);
+                })
                 .collect(Collectors.toList());
     }
+
 }
 

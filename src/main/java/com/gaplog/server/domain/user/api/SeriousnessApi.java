@@ -35,7 +35,7 @@ public class SeriousnessApi {
 
     @PutMapping
     @Operation(summary = "유저 티어 업데이트", description = "유저의 진지 버튼 누적 수에 따라 티어를 업데이트합니다.")
-    public ResponseEntity<Void> updateUserTier(@PathVariable Long userId) {
+    public ResponseEntity<Void> updateUserTier(@PathVariable("user_id") Long userId) {
         seriousnessService.updateSeriousnessTier(userId);
         return ResponseEntity.noContent().build();
     }

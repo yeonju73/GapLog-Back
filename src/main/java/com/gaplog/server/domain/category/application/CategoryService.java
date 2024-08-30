@@ -82,33 +82,33 @@ public class CategoryService {
 
     public Category addCategory(Long userId, Long ancestorId, String name) {
         User user = userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User not found with id: " + userId));
+        Category savedCategory = categoryRepository.save(Category.of(name, user));
 
-        Category newCategory = Category.of(name, user);
-        Category savedCategory = categoryRepository.save(newCategory);
-        
-        saveCategory(savedCategory, ancestorId);
+        saveSelfNode(savedCategory);
+        if(ancestorId > 0) saveCategory(savedCategory.getId(), ancestorId);
         return savedCategory;
     }
 
-    private void saveCategory(Category category, Long ancestorId) {
-        ClosureCategory selfNodeClosure = ClosureCategory.of(category,category,0L);
-        closureCategoryRepository.save(selfNodeClosure);
+    private void saveSelfNode(Category category){
+        closureCategoryRepository.save(ClosureCategory.of(category,category,0L));
+    }
 
+    private void saveCategory(Long categoryId, Long ancestorId) {
         List<ClosureCategory> allAncestorClosures = closureCategoryRepository.findByIdDescendantId(ancestorId);
         for (ClosureCategory ancestorClosure : allAncestorClosures) {
             Long depth = ancestorClosure.getDepth() + 1;
             ClosureCategory newClosureCategory = ClosureCategory.builder()
-                    .id(new ClosureCategoryId(ancestorClosure.getId().getAncestorId(), category.getId()))
+                    .id(new ClosureCategoryId(ancestorClosure.getId().getAncestorId(), categoryId))
                     .depth(depth)
                     .build();
             closureCategoryRepository.save(newClosureCategory);
         }
     }
 
-    public void updateCategory(Long categoryId, Long ancestorId) {
-        deleteCategory(categoryId);
+    public Category updateCategory(Long categoryId, Long ancestorId) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(()->new RuntimeException("Category not found with id: " + categoryId));
-        saveCategory(category, ancestorId);
+        deleteCategory(categoryId);
+        return addCategory(category.getUser().getId(), ancestorId, category.getName());
     }
 
     public void deleteCategory(Long categoryId) {

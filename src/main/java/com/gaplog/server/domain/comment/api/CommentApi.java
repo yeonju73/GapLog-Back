@@ -9,7 +9,6 @@ import com.gaplog.server.domain.comment.dto.response.CommentResponse;
 import com.gaplog.server.domain.comment.dto.response.CommentUpdateResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,34 +25,22 @@ public class CommentApi {
     @PostMapping
     @Operation(summary = "댓글 작성", description = "댓글을 작성합니다.")
     public ResponseEntity<CommentResponse> createComment(@RequestBody CommentRequest request) {
-        try{
-            CommentResponse response = commentService.createComment(request.getPostId(), request.getUserId(), request.getText(), request.getParentId());
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }catch (EntityNotFoundException e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        CommentResponse response = commentService.createComment(request.getPostId(), request.getUserId(), request.getText(), request.getParentId());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping("/{comment_id}")
     @Operation(summary = "댓글 수정", description = "댓글을 수정합니다.")
     public ResponseEntity<CommentUpdateResponse> updateComment(@PathVariable ("comment_id") Long commentId, @RequestBody CommentUpdateRequest request) {
-        try{
-            CommentUpdateResponse response = commentService.updateComment(commentId, request.getText());
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }catch (EntityNotFoundException e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        CommentUpdateResponse response = commentService.updateComment(commentId, request.getText());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/{comment_id}")
     @Operation(summary = "댓글 삭제", description = "댓글을 삭제합니다.")
     public ResponseEntity<Void> deleteComment(@PathVariable("comment_id") Long comment_id) {
-        try{
-            commentService.deleteComment(comment_id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch (EntityNotFoundException e){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
+        commentService.deleteComment(comment_id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/{comment_id}/likes")
@@ -62,10 +49,10 @@ public class CommentApi {
         try{
             CommentLikeUpdateResponse response = commentService.updateLikeCount(request.getUserId(), commentId);
             return new ResponseEntity<>(response, HttpStatus.OK);
-        }catch (EntityNotFoundException e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (InterruptedException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (InterruptedException e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+
     }
 }

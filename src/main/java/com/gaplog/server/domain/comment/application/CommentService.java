@@ -7,13 +7,13 @@ import com.gaplog.server.domain.comment.domain.CommentLike;
 import com.gaplog.server.domain.comment.dto.response.CommentLikeUpdateResponse;
 import com.gaplog.server.domain.comment.dto.response.CommentResponse;
 import com.gaplog.server.domain.comment.dto.response.CommentUpdateResponse;
+import com.gaplog.server.domain.comment.exception.CommentNotFoundException;
 import com.gaplog.server.domain.post.dao.PostRepository;
 import com.gaplog.server.domain.post.domain.Post;
 import com.gaplog.server.domain.user.dao.UserRepository;
 import com.gaplog.server.domain.user.domain.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.CannotAcquireLockException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +47,7 @@ public class CommentService {
     @Transactional
     public CommentUpdateResponse updateComment(Long commentId, String text) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new EntityNotFoundException("Comment not found with id: " + commentId));
+                .orElseThrow(() -> new CommentNotFoundException(commentId));
 
         comment.setText(text);
         commentRepository.save(comment);
@@ -57,7 +57,7 @@ public class CommentService {
     @Transactional
     public void deleteComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new EntityNotFoundException("Comment not found with id: " + commentId));
+                .orElseThrow(() -> new CommentNotFoundException(commentId));
 
         List<Comment> childComments = commentRepository.findByParentId(commentId);
 
@@ -82,7 +82,7 @@ public class CommentService {
             // 삭제하려는 댓글에게 부모 댓글이 있을 때
             if (comment.getParentId() != null) {
                 parentComment = commentRepository.findById(comment.getParentId())
-                        .orElseThrow(() -> new EntityNotFoundException("Parent not found with id: " + comment.getParentId()));
+                        .orElseThrow(() -> new CommentNotFoundException(comment.getParentId()));
 
                 // case 3: 부모 댓글의 삭제X된 자식이 1개(지금 삭제 요청이 들어온 댓글)이며, 부모가 이미 삭제상태인 댓글
 
@@ -103,7 +103,7 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentLikeUpdateResponse updateLikeCount(Long userId, Long commentId) throws InterruptedException{
+    public CommentLikeUpdateResponse updateLikeCount(Long userId, Long commentId) throws InterruptedException {
         while (true) {
             try {
                 User user = userRepository.findById(userId)
