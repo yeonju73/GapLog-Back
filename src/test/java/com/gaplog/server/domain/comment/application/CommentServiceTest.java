@@ -3,6 +3,7 @@ package com.gaplog.server.domain.comment.application;
 import com.gaplog.server.domain.comment.dao.CommentLikeRepository;
 import com.gaplog.server.domain.comment.dao.CommentRepository;
 import com.gaplog.server.domain.comment.domain.Comment;
+import com.gaplog.server.domain.comment.domain.CommentLike;
 import com.gaplog.server.domain.comment.dto.response.CommentResponse;
 import com.gaplog.server.domain.comment.dto.response.CommentUpdateResponse;
 import com.gaplog.server.domain.post.dao.PostRepository;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -151,6 +153,67 @@ public class CommentServiceTest {
         parentComment = commentRepository.findById(parentId).orElseThrow(() -> new IllegalArgumentException("Parent comment not found"));
         assertTrue(parentComment.getIsDeleted());
     }
+
+    @Test
+    @DisplayName("한 유저가 좋아요 눌렀다 지우기")
+    void likeUpdateTest() throws InterruptedException {
+        // Given
+        User user1 = userRepository.findById(10L).orElseThrow(() -> new IllegalArgumentException("user not found"));
+        CommentResponse response = commentService.createComment(post.getId(), user.getId(), "testComment", null);
+        Long commentId = response.getCommentId();
+
+        // When
+        commentService.updateLikeCount(user1.getId(), commentId);
+
+        // Then
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("Comment not found"));
+        assertEquals(comment.getLikeCount(), 1);
+
+        // When
+        commentService.updateLikeCount(user1.getId(), commentId);
+
+        // Then
+        comment = commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("Comment not found"));
+        assertEquals(comment.getLikeCount(), 0);
+    }
+
+    @Test
+    @DisplayName("여러 유저가 좋아요 누르기")
+    void likeUpdateTest2() throws InterruptedException {
+        // Given
+        User user1 = userRepository.findById(10L).orElseThrow(() -> new IllegalArgumentException("user not found"));
+        User user2 = userRepository.findById(11L).orElseThrow(() -> new IllegalArgumentException("user not found"));
+
+        CommentResponse response = commentService.createComment(post.getId(), user.getId(), "testComment", null);
+        Long commentId = response.getCommentId();
+
+        // When
+        commentService.updateLikeCount(user1.getId(), commentId);
+        commentService.updateLikeCount(user2.getId(), commentId);
+
+        // Then
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("Comment not found"));
+        assertEquals(comment.getLikeCount(), 2);
+    }
+
+    @Test
+    @DisplayName("댓글 아이디로 좋아요 누른 유저 찾기")
+    void findCommentLikeTest3() throws InterruptedException {
+        // Given
+        User user1 = userRepository.findById(10L).orElseThrow(() -> new IllegalArgumentException("user not found"));
+
+        CommentResponse response = commentService.createComment(post.getId(), user.getId(), "testComment", null);
+        Long commentId = response.getCommentId();
+
+        // When
+        commentService.updateLikeCount(user1.getId(), commentId);
+        List<CommentLike> commentLike = commentLikeRepository.findByCommentId(commentId);
+
+
+        // Then
+        assertEquals(commentLike.get(0).getUser().getId(), 10L);
+    }
+
     /*
     @Test
     @DisplayName("동시에 4명이 comment의 좋아요를 증가시킬때 ")
