@@ -8,13 +8,18 @@ import com.gaplog.server.domain.comment.dto.response.CommentLikeUpdateResponse;
 import com.gaplog.server.domain.comment.dto.response.CommentResponse;
 import com.gaplog.server.domain.comment.dto.response.CommentUpdateResponse;
 import com.gaplog.server.domain.comment.exception.CommentNotFoundException;
+import com.gaplog.server.domain.comment.exception.PostNotFoundException;
+import com.gaplog.server.domain.comment.exception.UserNotFoundException;
 import com.gaplog.server.domain.post.dao.PostRepository;
 import com.gaplog.server.domain.post.domain.Post;
 import com.gaplog.server.domain.user.dao.UserRepository;
 import com.gaplog.server.domain.user.domain.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.EnableRetry;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +27,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@EnableRetry
 public class CommentService {
 
     private final CommentRepository commentRepository;
@@ -33,10 +39,10 @@ public class CommentService {
     public CommentResponse createComment(Long postId, Long userId, String text, Long parentId) {
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + postId));
+                .orElseThrow(() -> new PostNotFoundException(postId));
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
+                .orElseThrow(() -> new UserNotFoundException(userId));
 
         Comment newComment = Comment.of(post, user, text, parentId);
 
@@ -103,36 +109,34 @@ public class CommentService {
     }
 
     @Transactional
+    @Retryable(
+            value = {ObjectOptimisticLockingFailureException.class},
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 500)
+    )
     public CommentLikeUpdateResponse updateLikeCount(Long userId, Long commentId) throws InterruptedException {
-        while (true) {
-            try {
-                User user = userRepository.findById(userId)
-                        .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
 
-                Comment comment = commentRepository.findById(commentId)
-                        .orElseThrow(() -> new EntityNotFoundException("Comment not found with id: " + commentId));
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException(commentId));
 
-                //좋아요가 이미 눌러져 있을때, delete Comment Like
-                if (commentLikeRepository.existsByUserIdAndCommentId(userId, commentId)){
-                    commentLikeRepository.deleteByUserIdAndCommentId(userId,commentId);
+        //좋아요가 이미 눌러져 있을때, delete Comment Like
+        if (commentLikeRepository.existsByUserIdAndCommentId(userId, commentId)){
+            commentLikeRepository.deleteByUserIdAndCommentId(userId,commentId);
 
-                    if (comment.getLikeCount() > 0){
-                        comment.setLikeCount(comment.getLikeCount() - 1);
-                    }
-                } //좋아요가 없을때, save Comment Like
-                else{
-                    CommentLike commentLike = CommentLike.of(user, comment);
-                    commentLikeRepository.save(commentLike);
-
-                    comment.setLikeCount(comment.getLikeCount() + 1);
-                }
-
-                commentRepository.save(comment);
-                return CommentLikeUpdateResponse.of(comment);
-            } catch (OptimisticLockingFailureException e) {
-                // 충돌이 발생한 경우에 대한 처리 로직
-                Thread.sleep(50);
+            if (comment.getLikeCount() > 0){
+                comment.setLikeCount(comment.getLikeCount() - 1);
             }
+        } //좋아요가 없을때, save Comment Like
+        else{
+            CommentLike commentLike = CommentLike.of(user, comment);
+            commentLikeRepository.save(commentLike);
+
+            comment.setLikeCount(comment.getLikeCount() + 1);
         }
+
+        commentRepository.save(comment);
+        return CommentLikeUpdateResponse.of(comment);
     }
 }
