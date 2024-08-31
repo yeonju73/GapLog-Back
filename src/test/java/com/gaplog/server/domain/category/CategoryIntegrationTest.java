@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -59,6 +60,7 @@ class CategoryIntegrationTest {
     }
 
     @Test
+    @WithMockUser
     void testAddCategory() throws Exception {
         // given
         CategorySaveRequest request = new CategorySaveRequest(testUser.getId(), 0L, "Test Category");
@@ -76,6 +78,7 @@ class CategoryIntegrationTest {
     }
 
     @Test
+    @WithMockUser
     void testGetCategoryTree() throws Exception {
         // Given
         Category parentCategory = categoryService.addCategory(testUser.getId(),0L,"Parent Category");
@@ -98,6 +101,7 @@ class CategoryIntegrationTest {
     }
 
     @Test
+    @WithMockUser
     void testUpdateCategory() throws Exception {
         // Given
         Category category = categoryService.addCategory(testUser.getId(),0L,"Old Category");
@@ -123,6 +127,7 @@ class CategoryIntegrationTest {
     }
 
     @Test
+    @WithMockUser
     void testDeleteCategory() throws Exception {
         // Given
         Category category = categoryService.addCategory(testUser.getId(),0L,"Category To Delete");
@@ -137,6 +142,7 @@ class CategoryIntegrationTest {
 
     // To Do : Post 응답 Test 추가
     @Test
+    @WithMockUser
     void testGetSubCategories() throws Exception {
         // Given
         Category parentCategory = categoryService.addCategory(testUser.getId(),0L,"Parent Category");

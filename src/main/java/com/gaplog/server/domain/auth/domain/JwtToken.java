@@ -9,13 +9,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class JWTToken {
+public class JwtToken {
     private String accessToken;
     private String refreshToken;
     private String grantType;
     private Long expiresIn;
 
-    public static JWTToken of(String accessToken, String refreshToken, String grantType, Long expiresIn) {
-        return new JWTToken(accessToken, refreshToken, grantType, expiresIn);
+    public static JwtToken of(String accessToken, String refreshToken, String grantType, Long expiresIn) {
+        return new JwtToken(accessToken, refreshToken, grantType, expiresIn);
     }
 }
