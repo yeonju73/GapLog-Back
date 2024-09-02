@@ -44,20 +44,18 @@ public class GoogleApiClient implements OauthApiClient {
 
     @Override
     public String requestAccessToken(OauthLoginParams params) {
-        String url = authUrl + "/token";
+        String url = authUrl;
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        //body.add("code", params.getAuthorizationCode());
+        MultiValueMap<String, String> body = params.makeBody();
         body.add("client_id", clientId);
         body.add("client_secret", clientSecret);
         body.add("redirect_uri", redirectUri);
         body.add("grant_type", GRANT_TYPE);
 
         HttpEntity<?> request = new HttpEntity<>(body, httpHeaders);
-
         GoogleTokens response = restTemplate.postForObject(url, request, GoogleTokens.class);
 
         assert response != null;
@@ -70,7 +68,7 @@ public class GoogleApiClient implements OauthApiClient {
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        httpHeaders.set("Authorization", "Bearer " + accessToken);
+        httpHeaders.setBearerAuth(accessToken);
 
         HttpEntity<?> request = new HttpEntity<>(httpHeaders);
 

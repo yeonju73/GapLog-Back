@@ -20,24 +20,20 @@ public class OauthLoginService {
     public Tokens login(OauthLoginParams params) {
         OauthInfoResponse oauthInfoResponse = requestOauthInfoService.request(params);
         Long memberId = findOrCreateMember(oauthInfoResponse);
-
         return oauthTokensGenerator.generate(memberId);
     }
 
-    private Long findOrCreateMember(OauthInfoResponse oAuthInfoResponse) {
-        return userRepository.findByEmail(oAuthInfoResponse.getEmail())
+    private Long findOrCreateMember(OauthInfoResponse oauthInfoResponse) {
+        return userRepository.findByEmail(oauthInfoResponse.getEmail())
                 .map(User::getId)
-                .orElseGet(() -> newMember(oAuthInfoResponse));
+                .orElseGet(() -> newMember(oauthInfoResponse));
     }
 
     private Long newMember(OauthInfoResponse oauthInfoResponse) {
-        User user = User.builder()
-                .email(oauthInfoResponse.getEmail())
-                .nickName(oauthInfoResponse.getNickname())
-                .oauthProvider(oauthInfoResponse.getOauthProvider())
-                .profileImg(oauthInfoResponse.getProfileImageUrl())
-                .build();
-
+        User user = User.of(oauthInfoResponse.getName(),
+                oauthInfoResponse.getEmail(),
+                oauthInfoResponse.getOauthProvider(),
+                oauthInfoResponse.getProfileImageUrl());
         return userRepository.save(user).getId();
     }
 }

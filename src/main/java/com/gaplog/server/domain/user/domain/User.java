@@ -21,6 +21,8 @@ public class User {
     @Column(name = "nickname")
     private String nickName;
 
+    private String name;
+
     private String email;
 
     @Column(name = "o_auth_provider")
@@ -44,17 +46,17 @@ public class User {
     private Seriousness seriousness;
 
     @Builder
-    public User(String nickName, String email, OauthProvider oauthProvider, String introduce, String profileImg) {
-        this.nickName = nickName;
+    public User(String name, String email, OauthProvider oauthProvider, String introduce, String profileImg) {
+        this.name = name;
         this.email = email;
         this.oauthProvider = oauthProvider;
         this.introduce = introduce;
         this.profileImg = profileImg;
     }
 
-    public static User of(String nickName, String email, OauthProvider oauthProvider, String profileImg) {
+    public static User of(String name, String email, OauthProvider oauthProvider, String profileImg) {
         return User.builder()
-                .nickName(nickName)
+                .name(name)
                 .email(email)
                 .oauthProvider(oauthProvider)
                 .profileImg(profileImg)

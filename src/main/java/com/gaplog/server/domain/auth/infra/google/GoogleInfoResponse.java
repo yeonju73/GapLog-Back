@@ -1,7 +1,6 @@
 package com.gaplog.server.domain.auth.infra.google;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gaplog.server.domain.auth.domain.oauth.OauthInfoResponse;
 import com.gaplog.server.domain.auth.domain.oauth.OauthProvider;
 import lombok.Getter;
@@ -10,27 +9,15 @@ import lombok.Getter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GoogleInfoResponse implements OauthInfoResponse {
 
-    @JsonProperty("google_account")
-    private GoogleAccount googleAccount;
+    private String email;
 
-    @Getter
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    static class GoogleAccount {
-        private GoogleProgile profile;
-        private String email;
-    }
+    private String name;
 
-    @Getter
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    static class GoogleProgile {
-        @JsonProperty("profile_image_url")
-        private String profileImageURL;
-        private String nickname;
-    }
+    private String picture;
 
     @Override
-    public String getNickname() {
-        return googleAccount.profile.nickname;
+    public String getName() {
+        return name;
     }
 
     @Override
@@ -40,11 +27,11 @@ public class GoogleInfoResponse implements OauthInfoResponse {
 
     @Override
     public String getEmail() {
-        return googleAccount.email;
+        return email;
     }
 
     @Override
     public String getProfileImageUrl() {
-        return googleAccount.profile.profileImageURL;
+        return picture;
     }
 }
