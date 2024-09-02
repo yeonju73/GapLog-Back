@@ -3,6 +3,7 @@ package com.gaplog.server.domain.category;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.gaplog.server.domain.auth.domain.oauth.OauthProvider;
 import com.gaplog.server.domain.category.application.CategoryService;
 import com.gaplog.server.domain.category.dao.CategoryRepository;
 import com.gaplog.server.domain.category.dao.ClosureCategoryRepository;
@@ -56,7 +57,7 @@ class CategoryIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        testUser = userRepository.save(new User(1L, "testUser"));
+        testUser = userRepository.save(User.of("testNickName","testEmail",OauthProvider.GOOGLE,"testURL"));
     }
 
     @Test

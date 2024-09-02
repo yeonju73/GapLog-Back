@@ -38,7 +38,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests((registry) ->
                         registry
-                                .requestMatchers("/api/**").permitAll() // api 임시 허용
+                                .requestMatchers("/api/**").permitAll() // papi 임시 허용
                                 .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/webjars/**").permitAll()
                                 .anyRequest().authenticated()
                 );

@@ -1,5 +1,9 @@
 package com.gaplog.server.domain.auth.api;
 
+import com.gaplog.server.domain.auth.application.OauthLoginService;
+import com.gaplog.server.domain.auth.dto.Tokens;
+import com.gaplog.server.domain.auth.dto.response.TokenResponse;
+import com.gaplog.server.domain.auth.infra.google.GoogleLoginParams;
 import com.gaplog.server.domain.auth.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,9 +16,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
-public class AuthController {
+public class AuthApi {
 
     private final JwtUtil jwtUtil;
+    private final OauthLoginService oauthLoginService;
 
     @GetMapping("/{user_id}")
     public ResponseEntity<Void> createAuthenticationToken(@PathVariable("user_id") String userId, HttpServletResponse response) {
@@ -30,8 +35,9 @@ public class AuthController {
     }
 
     @PostMapping("/google")
-    public ResponseEntity.BodyBuilder loginGoogle() {
-        //return ResponseEntity.ok();
-        return null;
+    public ResponseEntity<?> loginGoogle(@RequestBody GoogleLoginParams params, HttpServletResponse response) {
+        Tokens tokens = oauthLoginService.login(params);
+        TokenResponse tokenResponseDto = JwtUtil.setJwtResponse(response, tokens);
+        return ResponseEntity.ok(tokenResponseDto);
     }
 }
