@@ -1,15 +1,14 @@
 package com.gaplog.server.domain.user.domain;
 
+import com.gaplog.server.domain.auth.domain.oauth.OauthProvider;
+import com.gaplog.server.domain.category.domain.Category;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "user")
 public class User {
@@ -21,6 +20,13 @@ public class User {
 
     @Column(name = "nickname")
     private String nickName;
+
+    private String name;
+
+    private String email;
+
+    @Column(name = "o_auth_provider")
+    private OauthProvider oauthProvider;
 
     @Column(name = "introduce")
     private String introduce;
@@ -39,10 +45,22 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Seriousness seriousness;
 
-    // Category Test를 위해 임시로 추가, Oauth로그인 구현 시 변경
-    public User(Long l, String user) {
-        this.id = l;
-        this.nickName = user;
+    @Builder
+    public User(String name, String email, OauthProvider oauthProvider, String introduce, String profileImg) {
+        this.name = name;
+        this.email = email;
+        this.oauthProvider = oauthProvider;
+        this.introduce = introduce;
+        this.profileImg = profileImg;
+    }
+
+    public static User of(String name, String email, OauthProvider oauthProvider, String profileImg) {
+        return User.builder()
+                .name(name)
+                .email(email)
+                .oauthProvider(oauthProvider)
+                .profileImg(profileImg)
+                .build();
     }
 
     @PrePersist

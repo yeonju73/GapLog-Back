@@ -1,5 +1,6 @@
 package com.gaplog.server.domain.category.api;
 
+import com.gaplog.server.domain.auth.domain.oauth.OauthProvider;
 import com.gaplog.server.domain.category.application.CategoryService;
 import com.gaplog.server.domain.category.dto.request.CategorySaveRequest;
 import com.gaplog.server.domain.category.dto.response.CategoryTreeResponse;
@@ -56,7 +57,7 @@ class CategoryApiTest {
     @Test
     void getSubCategories_ShouldReturnPosts() throws Exception {
         // Given
-        User mockUser = new User(1L, "user1");
+        User mockUser = User.of("testNickName","testEmail", OauthProvider.GOOGLE,"testURL");
         Category mockCategory = new Category("Category 1", mockUser);
         Post post1 = new Post("First Post", "Content 1", mockCategory, "thumbnailUrl1", mockUser);
         Post post2 = new Post("Second Post", "Content 2", mockCategory, "thumbnailUrl2", mockUser);
@@ -80,7 +81,7 @@ class CategoryApiTest {
     @Test
     void addCategory_ShouldCreateCategory() throws Exception {
         // Given
-        Category newCategory = Category.of("New Category", new User(1L, "User"));
+        Category newCategory = Category.of("New Category", User.of("testNickName","testEmail",OauthProvider.GOOGLE,"testURL"));
         when(categoryService.addCategory(1L, 0L, "New Category")).thenReturn(newCategory);
 
         // When & Then
