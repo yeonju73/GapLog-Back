@@ -20,7 +20,6 @@ import java.util.List;
 
 import static com.gaplog.server.global.util.ApiUtil.getUserIdFromAuthentication;
 
-//To Do: closure table을 활용한 쿼리 작성
 @RestController
 @RequestMapping("/api/category")
 @RequiredArgsConstructor
