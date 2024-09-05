@@ -1,6 +1,7 @@
 package com.gaplog.server.domain.comment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gaplog.server.domain.auth.domain.oauth.OauthProvider;
 import com.gaplog.server.domain.comment.application.CommentService;
 import com.gaplog.server.domain.comment.dao.CommentLikeRepository;
 import com.gaplog.server.domain.comment.dao.CommentRepository;
@@ -61,7 +62,7 @@ public class CommentServiceTest {
         Long parentId = null;
 
         Post post = new Post(); // Post 객체 생성
-        User user = new User(); // User 객체 생성
+        User user = User.of("testNickName","testEmail", OauthProvider.GOOGLE,"testURL");
 
         when(postRepository.findById(postId)).thenReturn(Optional.of(post));
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
@@ -140,7 +141,7 @@ public class CommentServiceTest {
         Long userId = 1L;
         Long commentId = 1L;
 
-        User user = new User();
+        //User user = new User();
         Comment comment = new Comment();
         comment.setLikeCount(0);
 
@@ -162,7 +163,7 @@ public class CommentServiceTest {
         Long userId = 1L;
         Long commentId = 1L;
 
-        User user = new User();
+        User user = User.of("testNickName","testEmail", OauthProvider.GOOGLE,"testURL");
         Comment comment = new Comment();
         comment.setLikeCount(1);
 
