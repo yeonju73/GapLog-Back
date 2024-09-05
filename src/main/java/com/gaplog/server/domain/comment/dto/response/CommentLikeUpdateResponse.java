@@ -15,11 +15,13 @@ public class CommentLikeUpdateResponse {
 
     private Long commentId;
     private int likes;
+    private boolean isLiked;
 
-    public static CommentLikeUpdateResponse of(Comment comment) {
+    public static CommentLikeUpdateResponse of(Comment comment, Boolean isLiked) {
         return CommentLikeUpdateResponse.builder()
                 .commentId(comment.getId())
                 .likes(comment.getLikeCount())
+                .isLiked(isLiked)
                 .build();
     }
 

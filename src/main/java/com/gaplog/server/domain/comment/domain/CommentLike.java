@@ -1,13 +1,10 @@
 package com.gaplog.server.domain.comment.domain;
 
-import com.gaplog.server.domain.post.domain.Post;
 import com.gaplog.server.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.sql.ConnectionBuilder;
 
 @Getter
 @NoArgsConstructor

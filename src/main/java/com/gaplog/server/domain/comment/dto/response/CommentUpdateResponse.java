@@ -22,7 +22,9 @@ public class CommentUpdateResponse {
         return CommentUpdateResponse.builder()
                 .commentId(comment.getId())
                 .text(comment.getText())
-                .updatedAt(LocalDateTime.parse(comment.getUpdatedAt().toString()))
+                .updatedAt(comment.getUpdatedAt() != null
+                        ? LocalDateTime.parse(comment.getUpdatedAt().toString())
+                        : LocalDateTime.now())
                 .build();
     }
 

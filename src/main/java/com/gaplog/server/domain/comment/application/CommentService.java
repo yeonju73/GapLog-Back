@@ -8,8 +8,6 @@ import com.gaplog.server.domain.comment.dto.response.CommentLikeUpdateResponse;
 import com.gaplog.server.domain.comment.dto.response.CommentResponse;
 import com.gaplog.server.domain.comment.dto.response.CommentUpdateResponse;
 import com.gaplog.server.domain.comment.exception.CommentNotFoundException;
-import com.gaplog.server.domain.comment.exception.PostNotFoundException;
-import com.gaplog.server.domain.comment.exception.UserNotFoundException;
 import com.gaplog.server.domain.post.dao.PostRepository;
 import com.gaplog.server.domain.post.domain.Post;
 import com.gaplog.server.domain.user.dao.UserRepository;
@@ -39,10 +37,10 @@ public class CommentService {
     public CommentResponse createComment(Long postId, Long userId, String text, Long parentId) {
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new PostNotFoundException(postId));
+                .orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + postId));
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
 
         Comment newComment = Comment.of(post, user, text, parentId);
 
@@ -108,18 +106,19 @@ public class CommentService {
         }
     }
 
-    @Transactional
     @Retryable(
             value = {ObjectOptimisticLockingFailureException.class},
             maxAttempts = 3,
             backoff = @Backoff(delay = 500)
     )
-    public CommentLikeUpdateResponse updateLikeCount(Long userId, Long commentId) throws InterruptedException {
+    public CommentLikeUpdateResponse updateLikeCount(Long userId, Long commentId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
 
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException(commentId));
+
+        Boolean isLiked = false;
 
         //좋아요가 이미 눌러져 있을때, delete Comment Like
         if (commentLikeRepository.existsByUserIdAndCommentId(userId, commentId)){
@@ -134,9 +133,10 @@ public class CommentService {
             commentLikeRepository.save(commentLike);
 
             comment.setLikeCount(comment.getLikeCount() + 1);
+            isLiked = true;
         }
 
         commentRepository.save(comment);
-        return CommentLikeUpdateResponse.of(comment);
+        return CommentLikeUpdateResponse.of(comment, isLiked);
     }
 }

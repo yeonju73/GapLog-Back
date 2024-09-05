@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface PostRepository extends JpaRepository<Post, Long> {
     //Optional<Post> setMainPage();
     List<Post> findByCategoryId(Long categoryId);
-    Optional<Post> findById(Long id);
+    //Optional<Post> findById(Long id);
     @Query("SELECT p FROM Post p ORDER BY p.createdAt DESC")
     List<Post> findTop20ByOrderByCreatedAtDesc(Pageable pageable);
     List<Post> findByTitleContainingOrContentContaining(String titleKeyword, String contentKeyword);

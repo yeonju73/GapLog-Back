@@ -60,7 +60,6 @@ public class Post {
     @Column
     private boolean isDeleted;
 
-    @Column
     @Version
     private Long version;
 

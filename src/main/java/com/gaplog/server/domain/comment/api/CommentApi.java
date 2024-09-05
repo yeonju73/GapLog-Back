@@ -26,7 +26,7 @@ public class CommentApi {
     @Operation(summary = "댓글 작성", description = "댓글을 작성합니다.")
     public ResponseEntity<CommentResponse> createComment(@RequestBody CommentRequest request) {
         CommentResponse response = commentService.createComment(request.getPostId(), request.getUserId(), request.getText(), request.getParentId());
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PutMapping("/{comment_id}")
@@ -46,13 +46,7 @@ public class CommentApi {
     @PutMapping("/{comment_id}/likes")
     @Operation(summary = "댓글 좋아요 수 수정", description = "댓글의 좋아요 수를 수정합니다.")
     public ResponseEntity<CommentLikeUpdateResponse> updateLikeCount(@PathVariable ("comment_id") Long commentId, @RequestBody CommentLikeUpdateRequest request) {
-        try{
-            CommentLikeUpdateResponse response = commentService.updateLikeCount(request.getUserId(), commentId);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }catch (InterruptedException e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-
+        CommentLikeUpdateResponse response = commentService.updateLikeCount(request.getUserId(), commentId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
